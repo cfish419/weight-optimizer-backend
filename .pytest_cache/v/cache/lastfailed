@@ -1,0 +1,11 @@
+{
+  "tests/services/test_baggage_measurement.py::TestBaggageMeasurementService::test_process_baggage_image_success": true,
+  "tests/services/test_baggage_measurement.py::TestBaggageMeasurementService::test_calculate_scale_factor[image_size1-0.0001]": true,
+  "tests/services/test_baggage_measurement.py::TestBaggageMeasurementService::test_image_storage": true,
+  "tests/services/test_baggage_measurement.py::TestBaggageMeasurementService::test_preprocess_image": true,
+  "tests/services/test_optimization.py::TestOptimizationService::test_calculate_fuel_efficiency[cog1-expected_range1]": true,
+  "tests/services/test_optimization.py::TestOptimizationService::test_calculate_fuel_efficiency[cog2-expected_range2]": true,
+  "tests/api/test_measurement.py::TestMeasurementAPI::test_measure_baggage_success": true,
+  "tests/api/test_measurement.py::TestMeasurementAPI::test_measure_baggage_invalid_file_type": true,
+  "tests/api/test_measurement.py::TestMeasurementAPI::test_measure_baggage_low_confidence": true
+}
