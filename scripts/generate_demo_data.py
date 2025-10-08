@@ -28,3 +28,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+# Ensure the script runs only when executed directly
