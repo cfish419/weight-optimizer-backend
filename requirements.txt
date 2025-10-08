@@ -1,11 +1,13 @@
-# Phase 1 - Core Mathematical Engine
-# No external dependencies required for pure mathematical calculations
+# Core Dependencies
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.5.0
+sqlalchemy>=2.0.0
 
-# Phase 2 - Data Layer & API
-# Add these when implementing actual web framework:
-# fastapi>=0.104.0
-# uvicorn>=0.24.0
-# pydantic>=2.5.0
-# websockets>=12.0
-# sqlite3 (built-in)
-# requests>=2.31.0
+# Data Generation
+faker>=19.12.0
+pandas>=2.1.0  # For CSV handling
+
+# Utils
+python-dotenv>=1.0.0
+requests>=2.31.0
