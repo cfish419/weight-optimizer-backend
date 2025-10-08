@@ -83,14 +83,23 @@ module "security" {
 module "alb" {
   source = "../../modules/alb"
 
-  project_name       = var.project_name
-  environment        = var.environment
-  vpc_id             = module.vpc.vpc_id
-  public_subnet_ids  = module.vpc.public_subnet_ids
-  security_group_id  = module.security.alb_security_group_id
-  certificate_arn    = var.ssl_certificate_arn
+  project_name      = var.project_name
+  environment       = var.environment
+  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids = module.vpc.public_subnet_ids
+}
 
-  tags = local.common_tags
+# DNS Module
+module "dns" {
+  source = "../../modules/dns"
+
+  project_name  = var.project_name
+  environment   = var.environment
+  domain_name   = "balanceiq.com"
+  subdomain     = "demo.dev.balanceiq.com"
+  vpc_id        = module.vpc.vpc_id
+  alb_dns_name  = module.alb.alb_dns_name
+  alb_zone_id   = module.alb.alb_zone_id
 }
 
 # EC2 Module
@@ -175,27 +184,20 @@ resource "aws_ecr_lifecycle_policy" "main" {
   })
 }
 
-# ALB Target Group Attachment
-resource "aws_lb_target_group_attachment" "main" {
-  target_group_arn = module.alb.target_group_arn
+# ALB Target Group Attachments
+resource "aws_lb_target_group_attachment" "app" {
+  target_group_arn = module.alb.app_target_group_arn
+  target_id        = module.ec2.instance_id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "api" {
+  target_group_arn = module.alb.api_target_group_arn
   target_id        = module.ec2.instance_id
   port             = 8000
 }
 
-# Route 53 Record (if domain is provided)
-resource "aws_route53_record" "main" {
-  count = var.domain_name != "" ? 1 : 0
-
-  zone_id = var.route53_zone_id
-  name    = var.domain_name
-  type    = "A"
-
-  alias {
-    name                   = module.alb.dns_name
-    zone_id                = module.alb.zone_id
-    evaluate_target_health = true
-  }
-}
+# DNS records are managed by the DNS module
 
 # CloudWatch Dashboard
 resource "aws_cloudwatch_dashboard" "main" {
@@ -232,7 +234,7 @@ resource "aws_cloudwatch_dashboard" "main" {
 
         properties = {
           metrics = [
-            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", module.alb.arn_suffix],
+            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", module.alb.alb_arn],
             [".", "TargetResponseTime", ".", "."],
             [".", "HTTPCode_Target_2XX_Count", ".", "."],
             [".", "HTTPCode_Target_4XX_Count", ".", "."],
