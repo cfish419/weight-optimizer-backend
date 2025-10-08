@@ -22,7 +22,7 @@
 - Real-time agent sync
 
 ### Slide 4: Business Impact
-**Seven-Pillar Value Proposition**
+**Eight-Pillar Value Proposition**
 - **Immediate Fuel Savings**: $87K per aircraft/year (2-5% efficiency)
 - **Operational Efficiency**: 15-30% faster baggage loading
 - **Route Optimization**: Longer flights & better routes enabled
@@ -30,6 +30,7 @@
 - **Seamless Integration**: Builds on existing systems, minimal training
 - **Compliance Assurance**: $150K+ fine prevention per aircraft/year
 - **System Resilience**: 99.9% uptime, zero operational disruption
+- **Maintenance Efficiency**: 40-60% GVI reduction, proactive monitoring
 
 ### Slide 5: Next Steps
 **Ready for Implementation**
@@ -57,8 +58,8 @@
 11. **Compliance Validation**: FAA requirements
 
 ### Wrap-up (2 minutes)
-12. **Business Impact**: Seven-pillar value proposition ($525K per aircraft)
-13. **Implementation Advantage**: Seamless integration, enterprise resilience
+12. **Business Impact**: Eight-pillar value proposition ($545K per aircraft)
+13. **Implementation Advantage**: Seamless integration, maintenance efficiency
 14. **Q&A**: Questions and discussion
 
 ## 30-Minute Deep Dive Version
@@ -88,11 +89,11 @@
 18. **Compliance Dashboard**: Real-time validation
 
 ### Business Case (5 minutes)
-19. **Seven-Pillar ROI Analysis**: $525K per aircraft annual value
+19. **Eight-Pillar ROI Analysis**: $545K per aircraft annual value
 20. **Integration Advantage**: Seamless adoption, minimal change management
 21. **Compliance Value**: $150K+ fine prevention, regulatory confidence
-22. **System Resilience**: 99.9% uptime, enterprise-grade reliability
-23. **Strategic Route Opportunities**: Fuel efficiency enables expansion
+22. **Maintenance Efficiency**: 40-60% GVI reduction, proactive monitoring
+23. **System Resilience**: 99.9% uptime, enterprise-grade reliability
 24. **Implementation Timeline**: Days not months, zero operational disruption
 
 ## Demo Script Templates
@@ -163,6 +164,7 @@ Customer confidence preserved - no baggage anxiety."
 - **Seamless Implementation**: Builds on existing systems, minimal disruption
 - **Risk Mitigation**: $150K+ compliance fine prevention per aircraft
 - **Enterprise Resilience**: 99.9% uptime, zero technology-related delays
+- **Maintenance Efficiency**: 40-60% GVI reduction, proactive issue detection
 - **Competitive Differentiation**: Operational excellence advantage
 
 ### Regulatory Audience
