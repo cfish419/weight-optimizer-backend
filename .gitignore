@@ -26,3 +26,7 @@ build/
 
 # Local databases
 *.sqlite3
+.DS_Store
+*.db
+*.bak
+*.pytest_cache
