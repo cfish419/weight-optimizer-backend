@@ -65,6 +65,9 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 - **Special Baggage Handling**: Golf clubs, skis, wheelchairs, musical instruments
 - **FAA Compliance Automation**: 100% regulatory validation
 - **Visual Maintenance Monitoring**: GVI automation and proactive alerts
+- **IoT Integration**: Smart scales, cameras, and sensor networks
+- **PingFederate SSO**: Enterprise authentication and authorization
+- **Real-time Coordination**: WebSocket-based multi-agent communication
 
 ## Architecture
 
@@ -73,25 +76,25 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 ┌─────────────────────────────────────────────────────────────────┐
 │                    PRESENTATION LAYER                           │
 ├─────────────────────────────────────────────────────────────────┤
-│  React Frontend     │  Mobile Apps      │  Agent Interfaces     │
-│  - Dashboard        │  - Ramp Agent     │  - Operations         │
-│  - Visualization    │  - Gate Agent     │  - Load Master        │
-│  - Reports          │  - Maintenance    │  - Crew Interface     │
+│  React Dashboard    │  Mobile Apps      │  Agent Interfaces     │
+│  - CG Visualization │  - Ramp Agent     │  - Operations         │
+│  - Real-time Charts │  - Gate Agent     │  - Load Master        │
+│  - Reports & Alerts │  - Maintenance    │  - Crew Interface     │
 └─────────────────────────────────────────────────────────────────┘
                                 │
                         ┌───────▼───────┐
                         │   API Gateway │
-                        │   (FastAPI)   │
+                        │ FastAPI+WS+MQTT│
                         └───────┬───────┘
                                 │
 ┌─────────────────────────────────────────────────────────────────┐
 │                     APPLICATION LAYER                           │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │ Baggage Service │  │  Sync Service   │  │ Offline Service │ │
-│  │ - Tracking      │  │ - Real-time     │  │ - Queue Mgmt    │ │
-│  │ - Optimization  │  │ - Conflict Res  │  │ - Heartbeat     │ │
-│  │ - Validation    │  │ - Broadcasting  │  │ - Snapshots     │ │
+│  │ Baggage Service │  │  Sync Service   │  │ Device Manager  │ │
+│  │ - Tracking      │  │ - Multi-Agent   │  │ - IoT Scales    │ │
+│  │ - Special Items │  │ - Conflict Res  │  │ - Cameras       │ │
+│  │ - Optimization  │  │ - Broadcasting  │  │ - Sensors       │ │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
                                 │
@@ -99,11 +102,11 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 │                      CORE ENGINE LAYER                          │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │Weight/Balance   │  │  Load Optimizer │  │ FAA Validator   │ │
-│  │Calculator       │  │ - CG Positioning│  │ - Compliance    │ │
-│  │- CG Calculation │  │ - Compartment   │  │ - Regulations   │ │
-│  │- Weight Limits  │  │   Distribution  │  │ - Audit Trail   │ │
-│  │- MAC Percentage │  │ - Ballast Calc  │  │ - Reporting     │ │
+│  │Weight/Balance   │  │  Load Optimizer │  │Integration Engine│ │
+│  │Calculator       │  │ - CG Positioning│  │ - Legacy DCS    │ │
+│  │- CG Calculation │  │ - Compartment   │  │ - Maintenance   │ │
+│  │- Weight Limits  │  │   Distribution  │  │ - FAA Validator │ │
+│  │- MAC Percentage │  │ - Ballast Calc  │  │ - Audit Trail   │ │
 │  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -163,22 +166,26 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 - Baggage tracking with special item handling
 - Enterprise-grade resilience and failover
 
-### 🔄 Phase 3: Frontend & Presentation (IN PROGRESS)
-- React dashboard with real-time visualization
-- Multi-role agent interfaces
+### ✅ Phase 3: Frontend & Presentation (COMPLETED)
+- React dashboard with real-time CG visualization
+- Multi-role agent interfaces (Operations, Ramp, Load Master)
 - Docker containerization for demos
-- Maintenance monitoring integration
+- Maintenance monitoring with GVI integration
+- PingFederate SSO authentication
 
-### 📋 Phase 4: Compliance Reporting (PLANNED)
-- Automated load sheet generation
-- Regulatory audit trail documentation
-- Historical data tracking and analysis
+### ✅ Phase 4: IoT & Device Integration (COMPLETED)
+- MQTT gateway for IoT sensors and devices
+- Smart weight scales integration
+- Camera-based visual monitoring
+- Real-time device data processing
+- Offline device capability
 
-### 🔌 Phase 5: External Integrations (PLANNED)
-- Weight measurement tools and IoT sensors
-- Airline system APIs (DCS, maintenance)
-- Mobile applications for field agents
+### 🔄 Phase 5: Advanced Features (IN PROGRESS)
+- Automated compliance reporting
 - Predictive analytics and AI optimization
+- Advanced mobile applications
+- Enhanced legacy system integrations
+- Machine learning for load optimization
 
 ## Technical Specifications
 
@@ -250,7 +257,30 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 ### Deployment Environments
 - **Production**: `infrastructure/terraform/environments/production/`
 - **Staging**: `infrastructure/terraform/environments/staging/`
-- **Cost**: ~$94/month production, ~$47/month staging
+- **Cost**: ~$146/month production, ~$73/month staging
+
+### Domain Configuration
+- **Frontend**: `demo.dev.balanceiq.com`
+- **API**: `api.demo.dev.balanceiq.com`
+- **WebSocket**: `ws.demo.dev.balanceiq.com`
+- **IoT Gateway**: `mqtt.demo.dev.balanceiq.com`
+
+## System Integration
+
+### Multi-Agent Workflow
+1. **Operations Team**: Flight planning and fuel optimization
+2. **Ramp Agents**: Physical baggage loading via mobile apps
+3. **Gate Agents**: Passenger check-in and special baggage handling
+4. **Load Masters**: Weight distribution and ballast decisions
+5. **Maintenance**: GVI monitoring and proactive alerts
+6. **Flight Crew**: Final weight/balance confirmation
+
+### Real-time Data Flow
+```
+IoT Sensors → MQTT → Device Manager → Core Engine → Database
+     ↓         ↓         ↓            ↓           ↓
+Mobile Apps → API → Application Layer → Sync → WebSocket → All Agents
+```
 
 ## Contributing
 
@@ -262,11 +292,28 @@ This project follows a phased development approach with clean separation of conc
 4. **Data Layer** (`data/`): Persistence and repository patterns
 5. **Frontend** (`frontend/`): User interfaces and visualization
 6. **Infrastructure** (`infrastructure/`): Terraform modules and environments
+7. **IoT Integration** (`devices/`): Sensor and device management
 
 ## License
 
 Proprietary - Boeing 737 Weight & Balance Optimization System
 
+## Quick Demo Access
+
+### Live Demo URLs
+- **Dashboard**: https://demo.dev.balanceiq.com
+- **API Health**: https://api.demo.dev.balanceiq.com/health
+- **WebSocket**: wss://ws.demo.dev.balanceiq.com
+- **Documentation**: https://api.demo.dev.balanceiq.com/docs
+
+### Demo Credentials
+- **Operations**: ops@balanceiq.com / demo123
+- **Ramp Agent**: ramp@balanceiq.com / demo123
+- **Load Master**: load@balanceiq.com / demo123
+- **Maintenance**: maint@balanceiq.com / demo123
+
 ---
 
 **Ready for enterprise deployment with proven $545K annual value per aircraft**
+
+*Complete system delivering fuel savings, operational efficiency, compliance automation, and maintenance optimization through intelligent cargo loading.*
