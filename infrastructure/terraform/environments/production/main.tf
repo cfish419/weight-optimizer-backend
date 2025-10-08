@@ -89,6 +89,15 @@ module "alb" {
   public_subnet_ids = module.vpc.public_subnet_ids
 }
 
+# WAF Module
+module "waf" {
+  source = "../../modules/waf"
+
+  project_name = var.project_name
+  environment  = var.environment
+  alb_arn      = module.alb.alb_arn
+}
+
 # DNS Module
 module "dns" {
   source = "../../modules/dns"

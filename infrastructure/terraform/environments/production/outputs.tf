@@ -2,6 +2,7 @@ output "dns_info" {
   description = "DNS configuration information"
   value = {
     hosted_zone_id = module.dns.hosted_zone_id
+    name_servers   = module.dns.hosted_zone_name_servers
     app_domain     = module.dns.app_domain
     api_domain     = module.dns.api_domain
     websocket_domain = module.dns.websocket_domain
@@ -24,6 +25,11 @@ output "vpc_id" {
 output "ec2_instance_id" {
   description = "ID of the EC2 instance"
   value       = module.ec2.instance_id
+}
+
+output "ec2_private_ip" {
+  description = "Private IP address of the EC2 instance"
+  value       = module.ec2.private_ip
 }
 
 output "ecr_repository_url" {

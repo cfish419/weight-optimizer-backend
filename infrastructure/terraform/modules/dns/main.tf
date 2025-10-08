@@ -1,19 +1,15 @@
-resource "aws_route53_zone" "private" {
+resource "aws_route53_zone" "public" {
   name = var.domain_name
 
-  vpc {
-    vpc_id = var.vpc_id
-  }
-
   tags = {
-    Name        = "${var.project_name}-private-zone"
+    Name        = "${var.project_name}-public-zone"
     Environment = var.environment
     Project     = var.project_name
   }
 }
 
 resource "aws_route53_record" "app" {
-  zone_id = aws_route53_zone.private.zone_id
+  zone_id = aws_route53_zone.public.zone_id
   name    = var.subdomain
   type    = "A"
 
@@ -25,7 +21,7 @@ resource "aws_route53_record" "app" {
 }
 
 resource "aws_route53_record" "api" {
-  zone_id = aws_route53_zone.private.zone_id
+  zone_id = aws_route53_zone.public.zone_id
   name    = "api.${var.subdomain}"
   type    = "A"
 
@@ -37,7 +33,7 @@ resource "aws_route53_record" "api" {
 }
 
 resource "aws_route53_record" "ws" {
-  zone_id = aws_route53_zone.private.zone_id
+  zone_id = aws_route53_zone.public.zone_id
   name    = "ws.${var.subdomain}"
   type    = "A"
 

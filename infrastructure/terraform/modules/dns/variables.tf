@@ -11,7 +11,7 @@ variable "subdomain" {
 }
 
 variable "vpc_id" {
-  description = "VPC ID for the private hosted zone"
+  description = "VPC ID (not used for public hosted zone but kept for compatibility)"
   type        = string
 }
 
