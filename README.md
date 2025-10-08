@@ -226,13 +226,14 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 ## Documentation
 
 - **[Project Summary](PROJECT_SUMMARY.md)**: Comprehensive project documentation
+- **[Final Architecture](docs/FINAL_ARCHITECTURE_SUMMARY.md)**: Complete system architecture with corrected diagrams
 - **[Infrastructure Guide](docs/INFRASTRUCTURE_GUIDE.md)**: AWS deployment and CI/CD setup
-- **[System Architecture](docs/architecture/SYSTEM_ARCHITECTURE.md)**: Technical architecture details
+- **[System Architecture](docs/architecture/COMPLETE_SYSTEM_ARCHITECTURE.md)**: Detailed technical architecture
+- **[Frontend Design](docs/FRONTEND_DESIGN_SPECIFICATION.md)**: UI/UX specifications and business value integration
 - **[Deployment Strategy](docs/DEPLOYMENT_STRATEGY.md)**: Multi-environment deployment guide
 - **[Business Metrics](docs/presentation/BUSINESS_VALUE_METRICS.md)**: ROI analysis and value proposition
 - **[Presentation Guide](docs/presentation/SLIDE_DECK_OUTLINE.md)**: Demo scripts and talking points
-- **[Resilience Demo](docs/presentation/RESILIENCE_DEMO_SCRIPT.md)**: System reliability demonstrations
-- **[Maintenance Demo](docs/presentation/MAINTENANCE_DEMO_SCRIPT.md)**: GVI and visual monitoring features
+- **[CI/CD Guide](docs/CI_CD_GUIDE.md)**: Dual-pipeline architecture and deployment automation
 
 ## CI/CD & Infrastructure
 

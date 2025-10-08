@@ -1,11 +1,11 @@
 output "hosted_zone_id" {
   description = "ID of the Route 53 hosted zone"
-  value       = aws_route53_zone.private.zone_id
+  value       = aws_route53_zone.public.zone_id
 }
 
 output "hosted_zone_name_servers" {
   description = "Name servers for the hosted zone"
-  value       = aws_route53_zone.private.name_servers
+  value       = aws_route53_zone.public.name_servers
 }
 
 output "app_domain" {
