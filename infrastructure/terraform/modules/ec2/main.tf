@@ -72,7 +72,15 @@ resource "aws_iam_role_policy" "ec2_policy" {
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents",
-          "cloudwatch:PutMetricData"
+          "cloudwatch:PutMetricData",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem"
         ]
         Resource = "*"
       }
@@ -103,14 +111,23 @@ locals {
 
 # EC2 Instance in Private Subnet
 resource "aws_instance" "main" {
-  ami                    = data.aws_ami.amazon_linux.id
-  instance_type          = var.instance_type
-  key_name               = var.key_pair_name
-  vpc_security_group_ids = [var.security_group_id]
-  subnet_id              = var.private_subnet_id
-  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
+  ami                     = data.aws_ami.amazon_linux.id
+  instance_type           = var.instance_type
+  key_name                = var.key_pair_name
+  vpc_security_group_ids  = [var.security_group_id]
+  subnet_id               = var.private_subnet_id
+  iam_instance_profile    = aws_iam_instance_profile.ec2_profile.name
+  disable_api_termination = true
+  monitoring              = true
 
   user_data = local.user_data
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
 
   root_block_device {
     volume_type           = "gp3"

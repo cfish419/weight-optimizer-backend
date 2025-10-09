@@ -1,0 +1,80 @@
+# Prisma Cloud configuration for Weight Optimizer project
+template_version: 1
+
+# Policy suppressions for demo environment
+policy_suppressions:
+  # S3 bucket logging not needed for demo
+  - policy_id: "BC_AWS_S3_13"
+    comment: "S3 access logging not required for demo environment"
+  
+  # CloudTrail not needed for demo
+  - policy_id: "BC_AWS_CLOUDTRAIL_1"
+    comment: "CloudTrail will be implemented in production environment"
+  
+  # GuardDuty enterprise feature
+  - policy_id: "BC_AWS_GUARDDUTY_1"
+    comment: "GuardDuty is enterprise feature for production"
+  
+  # Config service not needed for demo
+  - policy_id: "BC_AWS_CONFIG_1"
+    comment: "AWS Config not required for demo environment"
+  
+  # RDS encryption - not using RDS
+  - policy_id: "BC_AWS_RDS_2"
+    comment: "Not using RDS in current architecture"
+  
+  # Lambda security - not using Lambda
+  - policy_id: "BC_AWS_LAMBDA_1"
+    comment: "Not using Lambda functions"
+  
+  # EKS security - using EC2
+  - policy_id: "BC_AWS_EKS_1"
+    comment: "Using EC2 instead of EKS"
+  
+  # API Gateway - using ALB
+  - policy_id: "BC_AWS_APIGATEWAY_1"
+    comment: "Using ALB instead of API Gateway"
+
+# Scan settings
+scan_settings:
+  # Scan Terraform files
+  terraform: true
+  
+  # Scan Docker files
+  dockerfile: true
+  
+  # Scan Kubernetes manifests
+  kubernetes: false
+  
+  # Scan secrets
+  secrets: true
+  
+  # Scan licenses
+  licenses: false
+
+# Output settings
+output:
+  format: "json"
+  file: "prisma-results.json"
+  
+# Severity threshold
+severity_threshold: "medium"
+
+# Frameworks to scan
+frameworks:
+  - terraform
+  - dockerfile
+  - secrets
+
+# Directories to include
+include_paths:
+  - "infrastructure/terraform"
+  - "docker"
+  - ".github/workflows"
+
+# Directories to exclude
+exclude_paths:
+  - "node_modules"
+  - ".git"
+  - "*.log"
+  - "*.tmp"

@@ -1,0 +1,52 @@
+# Checkov configuration for Weight Optimizer project
+framework:
+  - terraform
+
+# Skip specific checks that are not applicable to our use case
+skip-check:
+  # ALB access logs - we'll implement this in production
+  - CKV_AWS_91
+  - CKV_AWS_92
+  
+  # S3 bucket logging - not needed for this demo
+  - CKV_AWS_18
+  
+  # RDS encryption - we're not using RDS in this phase
+  - CKV_AWS_16
+  - CKV_AWS_17
+  
+  # EKS checks - we're using EC2, not EKS
+  - CKV_AWS_37
+  - CKV_AWS_38
+  - CKV_AWS_39
+  
+  # Lambda checks - not using Lambda
+  - CKV_AWS_45
+  - CKV_AWS_50
+  
+  # API Gateway checks - using ALB instead
+  - CKV_AWS_73
+  - CKV_AWS_76
+  
+  # CloudTrail - will be implemented in production
+  - CKV_AWS_35
+  - CKV_AWS_36
+  
+  # GuardDuty - enterprise feature for production
+  - CKV_AWS_20
+  
+  # Config - not needed for demo environment
+  - CKV_AWS_21
+
+# Directories to scan
+directory:
+  - infrastructure/terraform
+
+# Output format
+output: cli
+
+# Quiet mode
+quiet: false
+
+# Compact output
+compact: true

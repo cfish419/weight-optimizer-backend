@@ -1,6 +1,7 @@
 from typing import Dict, Any, List, Optional
 import httpx
 import json
+import os
 from datetime import datetime
 import asyncio
 from dataclasses import dataclass
@@ -20,28 +21,28 @@ class IntegrationService:
                 name="Existing Weight & Balance System",
                 endpoint="https://wb.airline.com/api",
                 auth_type="basic",
-                credentials={"username": "wb_user", "password": "wb_pass"},
+                credentials={"username": os.getenv("WB_USERNAME", "wb_user"), "password": os.getenv("WB_PASSWORD", "wb_pass")},
                 protocol="rest"
             ),
             "dcs": LegacySystemConfig(
                 name="Departure Control System",
                 endpoint="https://dcs.airline.com/soap",
                 auth_type="oauth",
-                credentials={"client_id": "dcs_client", "client_secret": "dcs_secret"},
+                credentials={"client_id": os.getenv("DCS_CLIENT_ID", "dcs_client"), "client_secret": os.getenv("DCS_CLIENT_SECRET", "dcs_secret")},
                 protocol="soap"
             ),
             "mro": LegacySystemConfig(
                 name="Maintenance System",
                 endpoint="https://mro.airline.com/api",
                 auth_type="api_key",
-                credentials={"api_key": "mro_api_key"},
+                credentials={"api_key": os.getenv("MRO_API_KEY", "mro_api_key")},
                 protocol="rest"
             ),
             "fos": LegacySystemConfig(
                 name="Flight Operations System",
                 endpoint="https://fos.airline.com/api",
                 auth_type="basic",
-                credentials={"username": "fos_user", "password": "fos_pass"},
+                credentials={"username": os.getenv("FOS_USERNAME", "fos_user"), "password": os.getenv("FOS_PASSWORD", "fos_pass")},
                 protocol="rest"
             )
         }
