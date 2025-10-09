@@ -138,5 +138,6 @@ class ScenarioHandler:
     def _trigger_recalculation(self, change: OperationalChange) -> bool:
         """Trigger weight/balance recalculation"""
         # This would integrate with the main calculation engine
-        print(f"Triggering recalculation for change: {change.description}")
+        import logging
+        logging.info(f"Triggering recalculation for change: {change.description}")
         return True

@@ -1,11 +1,44 @@
-# Phase 1 - Core Mathematical Engine
-# No external dependencies required for pure mathematical calculations
+# Boeing 737 Weight & Balance Optimizer Dependencies
 
-# Phase 2 - Data Layer & API
-# Add these when implementing actual web framework:
-# fastapi>=0.104.0
-# uvicorn>=0.24.0
-# pydantic>=2.5.0
-# websockets>=12.0
-# sqlite3 (built-in)
-# requests>=2.31.0
+# Core API Framework
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.5.0
+websockets>=12.0
+httpx>=0.25.0
+python-multipart>=0.0.6
+
+# Database Support
+boto3>=1.34.0  # DynamoDB
+asyncpg>=0.29.0  # PostgreSQL async
+psycopg2-binary>=2.9.0  # PostgreSQL sync
+sqlalchemy>=2.0.0
+alembic>=1.13.0
+
+# Caching & Message Queue
+redis>=5.0.0
+
+# Authentication & Security
+pyjwt>=2.8.0
+cryptography>=41.0.0
+passlib>=1.7.4
+
+# Data Processing
+numpy>=1.24.0
+pandas>=2.1.0
+
+# Monitoring & Logging
+sentry-sdk>=1.38.0
+structlog>=23.2.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.0.0
+isort>=5.12.0
+flake8>=6.0.0
+mypy>=1.7.0
+bandit>=1.7.5
+detect-secrets>=1.4.0
+pre-commit>=3.5.0

@@ -14,7 +14,8 @@ class WeatherService:
             # For demo, return sample data
             return self._get_sample_weather(airport_code)
         except Exception as e:
-            print(f"Weather service error: {e}")
+            import logging
+            logging.error(f"Weather service error: {e}")
             return None
             
     def _get_sample_weather(self, airport_code: str) -> WeatherData:

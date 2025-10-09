@@ -53,6 +53,37 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
+      - name: Run Bandit security scan
+        run: |
+          pip install bandit[toml]
+          bandit -r . -f json -o bandit-report.json || true
+          
+      - name: Run detect-secrets
+        run: |
+          pip install detect-secrets
+          detect-secrets scan --baseline .secrets.baseline
+          
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+          
+      - name: Format check with black
+        run: |
+          pip install black
+          black --check --diff .
+          
+      - name: Import sort check
+        run: |
+          pip install isort
+          isort --check-only --diff .
+          
+      - name: Type check with mypy
+        run: |
+          pip install mypy
+          mypy src/ --ignore-missing-imports
+          
       - name: Run unit tests
         run: |
           python -m pytest tests/unit/ -v --cov=src --cov-report=xml
@@ -167,7 +198,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@v0.15.9
         with:
           image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
 
