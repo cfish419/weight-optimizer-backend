@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BalanceIQ Supervisor</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .super-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+    .bay{border:1px solid #e5e7eb;border-radius:12px;padding:12px}
+    .bay h3{margin:0 0 8px 0}
+    .zones{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .cell{border:1px solid #e5e7eb;border-radius:10px;padding:8px}
+    .row{display:flex;gap:8px;align-items:center}
+    .bar{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-top:6px}
+    .fill{height:100%;width:0%}
+    .fill.red{background:var(--red)}
+    .fill.yellow{background:var(--yellow)}
+    .fill.blue{background:var(--blue)}
+    .meta{font-size:12px;color:#64748b}
+  </style>
+</head>
+<body>
+<header class="header">
+  <img src="/assets/images/southwest_logo.png" alt="Southwest logo">
+  <div class="brand-text">| BalanceIQ Supervisor</div>
+  <a href="/" class="hdr-link">Loader</a>
+</header>
+
+<main class="container">
+  <h1>Supervisor</h1>
+  <p class="sub">Live snapshot from Loader, or choose a flight to compute loads directly from the manifest.</p>
+
+  <div class="card">
+    <div class="controls" style="display:flex;gap:8px;flex-wrap:wrap">
+      <button id="sync-btn" class="secondary">Sync now</button>
+      <a id="clear-cache" class="ghost">Clear cached snapshot</a>
+      <select id="super-flight-select" style="min-width:240px">
+        <option value="">Loader Snapshot (default)</option>
+      </select>
+    </div>
+    <div id="last-upd" class="meta" style="margin-top:6px"></div>
+    <div id="summary" class="meta" style="margin-top:6px"></div>
+  </div>
+
+  <div class="super-grid">
+    <div class="bay">
+      <h3>FWD</h3>
+      <div class="zones">
+        <div class="cell"><div class="row"><strong>L1</strong><span class="meta" id="FWD.LEFT.1-meta"></span></div><div class="bar"><div class="fill red" id="FWD.LEFT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>L2</strong><span class="meta" id="FWD.LEFT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="FWD.LEFT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>L3</strong><span class="meta" id="FWD.LEFT.3-meta"></span></div><div class="bar"><div class="fill blue" id="FWD.LEFT.3"></div></div></div>
+
+        <div class="cell"><div class="row"><strong>R1</strong><span class="meta" id="FWD.RIGHT.1-meta"></span></div><div class="bar"><div class="fill red" id="FWD.RIGHT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>R2</strong><span class="meta" id="FWD.RIGHT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="FWD.RIGHT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>R3</strong><span class="meta" id="FWD.RIGHT.3-meta"></span></div><div class="bar"><div class="fill blue" id="FWD.RIGHT.3"></div></div></div>
+      </div>
+    </div>
+
+    <div class="bay">
+      <h3>AFT</h3>
+      <div class="zones">
+        <div class="cell"><div class="row"><strong>L1</strong><span class="meta" id="AFT.LEFT.1-meta"></span></div><div class="bar"><div class="fill red" id="AFT.LEFT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>L2</strong><span class="meta" id="AFT.LEFT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="AFT.LEFT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>L3</strong><span class="meta" id="AFT.LEFT.3-meta"></span></div><div class="bar"><div class="fill blue" id="AFT.LEFT.3"></div></div></div>
+
+        <div class="cell"><div class="row"><strong>R1</strong><span class="meta" id="AFT.RIGHT.1-meta"></span></div><div class="bar"><div class="fill red" id="AFT.RIGHT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>R2</strong><span class="meta" id="AFT.RIGHT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="AFT.RIGHT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>R3</strong><span class="meta" id="AFT.RIGHT.3-meta"></span></div><div class="bar"><div class="fill blue" id="AFT.RIGHT.3"></div></div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const KEY = 'balanceiq-supervisor';
+
+  async function fetchFlightData(){
+    try{
+      const res = await fetch('/assets/data/mock_flight_data.json', {cache:'no-cache'});
+      return await res.json();
+    }catch(e){ console.warn('flight data fetch failed', e); return null; }
+  }
+  function colorForZone(zone){ return zone==='FWD'?'red':(zone==='MID'?'yellow':(zone==='AFT'?'blue':null)); }
+  function computeSnapshotFromManifest(man){
+    if(!man) return null;
+    const kg2lb = kg=>kg*2.20462;
+    const cells = {
+      'FWD.LEFT.1':{count:0, weightLb:0}, 'FWD.RIGHT.1':{count:0, weightLb:0},
+      'FWD.LEFT.2':{count:0, weightLb:0}, 'FWD.RIGHT.2':{count:0, weightLb:0},
+      'FWD.LEFT.3':{count:0, weightLb:0}, 'FWD.RIGHT.3':{count:0, weightLb:0},
+      'AFT.LEFT.1':{count:0, weightLb:0}, 'AFT.RIGHT.1':{count:0, weightLb:0},
+      'AFT.LEFT.2':{count:0, weightLb:0}, 'AFT.RIGHT.2':{count:0, weightLb:0},
+      'AFT.LEFT.3':{count:0, weightLb:0}, 'AFT.RIGHT.3':{count:0, weightLb:0},
+    };
+    const rr = {'FWD.1':'LEFT','FWD.2':'LEFT','FWD.3':'LEFT','AFT.1':'LEFT','AFT.2':'LEFT','AFT.3':'LEFT'};
+    const flip = s => s === 'LEFT' ? 'RIGHT' : 'LEFT';
+
+    const checked = man.baggage.filter(b=>b.status==='CHECKED_IN');
+    const bins = {FWD:0, MID:0, AFT:0};
+    let midToFront = true;
+    let totalLb = 0;
+    for(const b of checked){
+      const kg = Number(b.weight_kg||0);
+      const lb = kg2lb(kg); totalLb += lb;
+      const target = Object.entries(bins).sort((a,b)=> a[1]-b[1])[0][0]; // naive optimize
+      bins[target] += kg;
+      const color = colorForZone(target);
+      const zoneNum = (color==='red'?1:(color==='yellow'?2:(color==='blue'?3:null)));
+      let area = target==='AFT'?'AFT':(target==='FWD'?'FWD':null);
+      if(!area){ area = midToFront ? 'FWD' : 'AFT'; midToFront = !midToFront; }
+      const key = `${area}.${zoneNum}`;
+      const side = rr[key]; rr[key] = flip(side);
+      const cellKey = `${area}.${side}.${zoneNum}`;
+      cells[cellKey].count += 1;
+      cells[cellKey].weightLb += lb;
+    }
+    return {
+      version: 3,
+      perCellCap: 20,
+      ts: Date.now(),
+      flightNumber: man.flight?.flight_number || null,
+      totals: { bags: checked.length, weightLb: totalLb },
+      cells
+    };
+  }
+
+  function readSnap(){
+    try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return null; }
+  }
+
+  function render(){
+    const snap = readSnap();
+    const lu = document.getElementById('last-upd');
+    const sum = document.getElementById('summary');
+    if(!snap){
+      if(lu) lu.textContent = 'No snapshot';
+      if(sum) sum.textContent = '';
+      Array.from(document.querySelectorAll('.fill')).forEach(el=> el.style.width='0%');
+      Array.from(document.querySelectorAll('[id$="-meta"]')).forEach(el=> el.textContent='');
+      return;
+    }
+    if(lu) lu.textContent = `Last update: ${new Date(snap.ts||Date.now()).toLocaleTimeString()} ${snap.flightNumber? '• Flight '+snap.flightNumber : ''}`;
+    if(sum) sum.textContent = `${snap.totals?.bags||0} bags • ${Math.round(Number(snap.totals?.weightLb||0))} lb`;
+
+    // Scale bars relative to the max cell weight to give a visual distribution
+    const weights = Object.values(snap.cells||{}).map(c=>c.weightLb||0);
+    const maxW = Math.max(1, ...weights);
+    for(const id of Object.keys(snap.cells||{})){
+      const c = snap.cells[id];
+      const pct = Math.max(0, Math.min(100, Math.round((c.weightLb||0)/maxW*100)));
+      const fill = document.getElementById(id);
+      const meta = document.getElementById(id+'-meta');
+      if(fill) fill.style.width = pct + '%';
+      if(meta) meta.textContent = `${c.count||0} • ${Math.round(c.weightLb||0)} lb`;
+    }
+  }
+
+  // Controls
+  document.getElementById('sync-btn')?.addEventListener('click', render);
+  document.getElementById('clear-cache')?.addEventListener('click', ()=>{ localStorage.removeItem(KEY); render(); });
+
+  // Flight dropdown (compute from JSON)
+  (async function initFlightSwitcher(){
+    const data = await fetchFlightData();
+    const sel = document.getElementById('super-flight-select');
+    if(sel && data?.flights){
+      // options
+      const flights = data.flights.slice().sort((a,b)=> a.flight_number.localeCompare(b.flight_number));
+      for(const f of flights){
+        const opt = document.createElement('option');
+        opt.value = f.flight_number;
+        opt.textContent = `${f.flight_number} (${f.departure}→${f.arrival})`;
+        sel.appendChild(opt);
+      }
+      sel.addEventListener('change', (e)=>{
+        const val = e.target.value;
+        if(!val){ render(); return; }
+        const man = (data?.manifests||[]).find(m=> m.flight?.flight_number===val);
+        const snap = computeSnapshotFromManifest(man);
+        if(snap){
+          try{ localStorage.setItem(KEY, JSON.stringify(snap)); }catch(_){}
+        }
+        render();
+      });
+    }
+  })();
+
+  // Live updates
+  setInterval(render, 2000);
+  window.addEventListener('storage', (e)=>{ if(e.key===KEY) render(); });
+  render();
+</script>
+</body>
+</html>
