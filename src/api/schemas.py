@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
 
 class BaggageBase(BaseModel):
     tag_number: str
@@ -13,8 +15,10 @@ class BaggageBase(BaseModel):
     category: str
     status: str
 
+
 class BaggageCreate(BaggageBase):
     flight_id: str
+
 
 class BaggageResponse(BaggageBase):
     id: str
@@ -22,6 +26,7 @@ class BaggageResponse(BaggageBase):
 
     class Config:
         from_attributes = True
+
 
 class FlightBase(BaseModel):
     flight_number: str
@@ -31,8 +36,10 @@ class FlightBase(BaseModel):
     departure_time: datetime
     estimated_passengers: int
 
+
 class FlightCreate(FlightBase):
     pass
+
 
 class FlightResponse(FlightBase):
     id: str
@@ -41,8 +48,10 @@ class FlightResponse(FlightBase):
     class Config:
         from_attributes = True
 
+
 class OptimizationRequest(BaseModel):
     flight_id: str
+
 
 class BaggagePosition(BaseModel):
     tag_number: str
@@ -51,6 +60,7 @@ class BaggagePosition(BaseModel):
     position_z: float
     loading_order: int
     zone: str
+
 
 class OptimizationResponse(BaseModel):
     flight_id: str

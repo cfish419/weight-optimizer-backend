@@ -10,6 +10,11 @@ variable "environment" {
   default     = "production"
 }
 
+variable "ssl_certificate_arn" {
+  description = "ARN of SSL certificate for HTTPS listener"
+  type        = string
+}
+
 variable "vpc_id" {
   description = "VPC ID where ALB will be created"
   type        = string

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Dict
 
+
 class Boeing737Variant(Enum):
     B737_700 = "737-700"
     B737_800 = "737-800"
@@ -9,6 +10,7 @@ class Boeing737Variant(Enum):
     B737_MAX7 = "737-MAX7"
     B737_MAX8 = "737-MAX8"
     B737_MAX9 = "737-MAX9"
+
 
 @dataclass
 class AircraftSpecs:
@@ -24,6 +26,7 @@ class AircraftSpecs:
     cg_aft_limit: float  # % MAC
     optimal_cg: float  # % MAC
 
+
 # Aircraft specifications database
 AIRCRAFT_SPECS: Dict[Boeing737Variant, AircraftSpecs] = {
     Boeing737Variant.B737_700: AircraftSpecs(
@@ -37,7 +40,7 @@ AIRCRAFT_SPECS: Dict[Boeing737Variant, AircraftSpecs] = {
         aft_cargo_capacity=1900,
         cg_forward_limit=15.0,
         cg_aft_limit=35.0,
-        optimal_cg=27.5
+        optimal_cg=27.5,
     ),
     Boeing737Variant.B737_800: AircraftSpecs(
         variant=Boeing737Variant.B737_800,
@@ -50,7 +53,7 @@ AIRCRAFT_SPECS: Dict[Boeing737Variant, AircraftSpecs] = {
         aft_cargo_capacity=2300,
         cg_forward_limit=15.0,
         cg_aft_limit=35.0,
-        optimal_cg=28.0
+        optimal_cg=28.0,
     ),
     Boeing737Variant.B737_900: AircraftSpecs(
         variant=Boeing737Variant.B737_900,
@@ -63,7 +66,7 @@ AIRCRAFT_SPECS: Dict[Boeing737Variant, AircraftSpecs] = {
         aft_cargo_capacity=2500,
         cg_forward_limit=15.0,
         cg_aft_limit=35.0,
-        optimal_cg=28.5
+        optimal_cg=28.5,
     ),
     Boeing737Variant.B737_MAX8: AircraftSpecs(
         variant=Boeing737Variant.B737_MAX8,
@@ -76,6 +79,6 @@ AIRCRAFT_SPECS: Dict[Boeing737Variant, AircraftSpecs] = {
         aft_cargo_capacity=2300,
         cg_forward_limit=15.0,
         cg_aft_limit=35.0,
-        optimal_cg=28.2
-    )
+        optimal_cg=28.2,
+    ),
 }
