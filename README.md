@@ -1,15 +1,13 @@
 # Boeing 737 Weight & Balance Optimizer
 
-**Comprehensive cargo loading optimization system delivering $545K annual value per aircraft**
-
 ## Eight-Pillar Value Proposition
 
-🛩️ **Immediate Fuel Savings**: 2-5% efficiency improvement ($87K per aircraft/year)  
+🛩️ **Immediate Fuel Savings**: 2-5% efficiency improvement
 ⚡ **Operational Efficiency**: 15-30% faster baggage loading processes  
 🗺️ **Strategic Route Expansion**: Fuel efficiency enables longer flights and new routes  
 ❤️ **Customer Loyalty Enhancement**: Superior baggage handling experience  
 🔄 **Seamless Integration**: Builds on existing weight & balance systems  
-✅ **Compliance Assurance**: $150K+ fine prevention through automated FAA validation  
+✅ **Compliance Assurance**: Automated FAA validation  
 🛡️ **System Resilience**: 99.9% uptime with enterprise-grade reliability  
 🔧 **Maintenance Efficiency**: 40-60% GVI reduction with proactive monitoring  
 
@@ -65,8 +63,7 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 
 ### Key Features
 - **Real-time Weight/Balance Calculations**: Sub-second CG optimization
-- **Multi-Agent Coordination**: Operations, Ramp, Load Master, Maintenance teams
-- **Offline Resilience**: Seamless operation without connectivity
+- **Multi-Agent Coordination**: Operations, Ramp
 - **Special Baggage Handling**: Golf clubs, skis, wheelchairs, musical instruments
 - **FAA Compliance Automation**: 100% regulatory validation
 - **Visual Maintenance Monitoring**: GVI automation and proactive alerts
@@ -77,143 +74,6 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 - **Enterprise Security**: Comprehensive scanning, secret management, code quality
 - **Plugin Architecture**: Optional advanced features with zero core impact
 - **Feature Flags**: Gradual adoption and easy rollback capabilities
-
-## Architecture
-
-### Application Architecture
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                           │
-├─────────────────────────────────────────────────────────────────┤
-│  React Dashboard    │  Mobile Apps      │  Agent Interfaces     │
-│  - CG Visualization │  - Ramp Agent     │  - Operations         │
-│  - Real-time Charts │  - Gate Agent     │  - Load Master        │
-│  - Reports & Alerts │  - Maintenance    │  - Crew Interface     │
-└─────────────────────────────────────────────────────────────────┘
-                                │
-                        ┌───────▼───────┐
-                        │   API Gateway │
-                        │ FastAPI+WS+MQTT│
-                        └───────┬───────┘
-                                │
-┌─────────────────────────────────────────────────────────────────┐
-│                     APPLICATION LAYER                           │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │ Baggage Service │  │  Sync Service   │  │ Device Manager  │ │
-│  │ - Tracking      │  │ - Multi-Agent   │  │ - IoT Scales    │ │
-│  │ - Special Items │  │ - Conflict Res  │  │ - Cameras       │ │
-│  │ - Optimization  │  │ - Broadcasting  │  │ - Sensors       │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-                                │
-┌─────────────────────────────────────────────────────────────────┐
-│                      CORE ENGINE LAYER                          │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │Weight/Balance   │  │  Load Optimizer │  │Integration Engine│ │
-│  │Calculator       │  │ - CG Positioning│  │ - Legacy DCS    │ │
-│  │- CG Calculation │  │ - Compartment   │  │ - Maintenance   │ │
-│  │- Weight Limits  │  │   Distribution  │  │ - FAA Validator │ │
-│  │- MAC Percentage │  │ - Ballast Calc  │  │ - Audit Trail   │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### AWS Infrastructure Architecture
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        VPC (10.0.0.0/24)                       │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────────┐                    ┌─────────────────┐     │
-│  │ Public Subnet   │                    │ Public Subnet   │     │
-│  │ 10.0.0.0/28     │                    │ 10.0.0.16/28    │     │
-│  │ ┌─────────────┐ │                    │ ┌─────────────┐ │     │
-│  │ │     ALB     │ │                    │ │ NAT Gateway │ │     │
-│  │ └─────────────┘ │                    │ └─────────────┘ │     │
-│  └─────────────────┘                    └─────────────────┘     │
-│           │                                       │             │
-│  ┌─────────────────┐                    ┌─────────────────┐     │
-│  │ Private Subnet  │                    │ Private Subnet  │     │
-│  │ 10.0.0.32/28    │                    │ 10.0.0.48/28    │     │
-│  │ ┌─────────────┐ │                    │                 │     │
-│  │ │ EC2 Instance│ │                    │   (Reserved)    │     │
-│  │ │   Docker    │ │                    │                 │     │
-│  │ └─────────────┘ │                    │                 │     │
-│  └─────────────────┘                    └─────────────────┘     │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────▼─────────┐
-                    │ Internet Gateway  │
-                    └───────────────────┘
-```
-
-## Business Impact
-
-### Per Aircraft Annual Value: $545,000
-- **Revenue Increases**: $115,000 (route optimization, customer retention, premium services)
-- **Cost Savings**: $430,000 (fuel, labor, compliance, insurance, maintenance)
-- **Implementation Cost**: $50,000
-- **Net ROI Year 1**: $495,000 (990% ROI)
-
-### Fleet-Wide Impact (100 Aircraft, 5 Years)
-- **Total Value**: $287.5M
-- **Investment**: $15M
-- **Net ROI**: $272.5M (1,817% ROI)
-
-## Development Phases
-
-### ✅ Phase 1: Core Mathematical Engine (COMPLETED)
-- Pure mathematical computation library
-- Weight/balance calculations and CG optimization
-- FAA compliance validation
-- Ballast recommendations
-
-### ✅ Phase 2: Data Layer & API (COMPLETED)
-- REST API with real-time WebSocket support
-- Multi-agent coordination and offline capability
-- Baggage tracking with special item handling
-- Enterprise-grade resilience and failover
-
-### ✅ Phase 3: Frontend & Presentation (COMPLETED)
-- React dashboard with real-time CG visualization
-- Multi-role agent interfaces (Operations, Ramp, Load Master)
-- Docker containerization for demos
-- Maintenance monitoring with GVI integration
-- PingFederate SSO authentication
-
-### ✅ Phase 4: IoT & Device Integration (COMPLETED)
-- MQTT gateway for IoT sensors and devices
-- Smart weight scales integration
-- Camera-based visual monitoring
-- Real-time device data processing
-- Offline device capability
-
-### ✅ Phase 5: Observability & Security (COMPLETED)
-- CloudWatch comprehensive monitoring with SLA/SLO/SLI framework
-- Security scanning with Bandit, Checkov, detect-secrets
-- Code quality with Black, isort, flake8 linting
-- Performance tracking and business metrics
-- Alert management with SNS notifications
-
-### ✅ Phase 6: Advanced Features Plugin Architecture (COMPLETED)
-- **Plugin-Based Architecture**: Non-intrusive advanced features
-- **Feature Flag System**: Environment-based toggles for gradual adoption
-- **ML Optimization Plugin**: Machine learning enhanced calculations
-- **Compliance Reporting Plugin**: Automated FAA compliance reports
-- **Predictive Analytics Plugin**: Advanced forecasting and insights
-- **Mobile Integration Plugin**: Enhanced mobile app capabilities
-- **Zero Core Impact**: Advanced features don't affect basic API performance
-
-## Technical Specifications
-
-### Boeing 737 Parameters
-- **Aircraft Empty Weight**: 41,000 kg
-- **Max Takeoff Weight**: 79,000 kg
-- **Passenger Capacity**: 150-175 (737-800)
-- **Cargo Compartments**: Forward (3,400kg), Aft (2,300kg)
-- **CG Limits**: 15-35% MAC
-- **Optimal CG**: ~28% MAC for fuel efficiency
 
 ### System Requirements
 - **Response Time**: Sub-second calculations
@@ -278,23 +138,6 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 - Proactive maintenance alerts
 - $85,000 annual maintenance savings per aircraft
 
-## Documentation
-
-- **[Project Summary](PROJECT_SUMMARY.md)**: Comprehensive project documentation
-- **[Final Architecture](docs/FINAL_ARCHITECTURE_SUMMARY.md)**: Complete system architecture with corrected diagrams
-- **[Operational Scenarios](docs/OPERATIONAL_SCENARIOS.md)**: Comprehensive scenario handling documentation
-- **[Infrastructure Guide](docs/INFRASTRUCTURE_GUIDE.md)**: AWS deployment and CI/CD setup
-- **[System Architecture](docs/architecture/COMPLETE_SYSTEM_ARCHITECTURE.md)**: Detailed technical architecture
-- **[Frontend Design](docs/FRONTEND_DESIGN_SPECIFICATION.md)**: UI/UX specifications and business value integration
-- **[Deployment Strategy](docs/DEPLOYMENT_STRATEGY.md)**: Multi-environment deployment guide
-- **[Business Metrics](docs/presentation/BUSINESS_VALUE_METRICS.md)**: ROI analysis and value proposition
-- **[Presentation Guide](docs/presentation/SLIDE_DECK_OUTLINE.md)**: Demo scripts and talking points
-- **[Technical Presentation](docs/presentation/TECHNICAL_PRESENTATION_POINTS.md)**: Technical deep-dive presentation guide
-- **[CI/CD Guide](docs/CI_CD_GUIDE.md)**: Dual-pipeline architecture and deployment automation
-- **[Observability Strategy](docs/OBSERVABILITY_STRATEGY.md)**: Comprehensive monitoring and alerting framework
-- **[Security Scan Summary](SECURITY_SCAN_SUMMARY.md)**: Security assessment and compliance report
-- **[Phase 6 Architecture](docs/PHASE_6_ARCHITECTURE.md)**: Plugin-based advanced features architecture
-
 ## CI/CD & Infrastructure
 
 ### Separate Pipelines
@@ -311,22 +154,6 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 - **Production**: `infrastructure/terraform/environments/production/`
 - **Staging**: `infrastructure/terraform/environments/staging/`
 - **Cost**: ~$146/month production, ~$73/month staging
-
-### Domain Configuration
-- **Frontend**: `demo.dev.balanceiq.com`
-- **API**: `api.demo.dev.balanceiq.com`
-- **WebSocket**: `ws.demo.dev.balanceiq.com`
-- **IoT Gateway**: `mqtt.demo.dev.balanceiq.com`
-
-## System Integration
-
-### Multi-Agent Workflow
-1. **Operations Team**: Flight planning and fuel optimization
-2. **Ramp Agents**: Physical baggage loading via mobile apps
-3. **Gate Agents**: Passenger check-in and special baggage handling
-4. **Load Masters**: Weight distribution and ballast decisions
-5. **Maintenance**: GVI monitoring and proactive alerts
-6. **Flight Crew**: Final weight/balance confirmation
 
 ### Observability & Monitoring
 - **SLA**: 99.9% uptime, <500ms P95 response time
@@ -350,16 +177,6 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 - **Predictive Analytics**: Advanced forecasting and insights
 - **Mobile Integration**: Enhanced mobile app capabilities
 
-### Real-time Data Flow
-```
-IoT Sensors → MQTT → Device Manager → Core Engine → Database
-     ↓         ↓         ↓            ↓           ↓
-Mobile Apps → API → Application Layer → Sync → WebSocket → All Agents
-     ↓         ↓         ↓            ↓           ↓
-Weather APIs → Scenario Service → Weight Calculator → Real-time Updates
-     ↓         ↓         ↓            ↓           ↓
-Airline DCS → Integration Engine → FAA Validator → Compliance Reports
-```
 
 ## Contributing
 
@@ -377,23 +194,6 @@ This project follows a phased development approach with clean separation of conc
 10. **Plugin System** (`plugins/`): Optional advanced features with feature flags
 11. **Configuration** (`config/`): Feature flag management and plugin registry
 
-## License
-
-Proprietary - Boeing 737 Weight & Balance Optimization System
-
-## Quick Demo Access
-
-### Live Demo URLs
-- **Dashboard**: https://demo.dev.balanceiq.com
-- **API Health**: https://api.demo.dev.balanceiq.com/health
-- **WebSocket**: wss://ws.demo.dev.balanceiq.com
-- **Documentation**: https://api.demo.dev.balanceiq.com/docs
-
-### Demo Credentials
-- **Operations**: ops@balanceiq.com / demo123
-- **Ramp Agent**: ramp@balanceiq.com / demo123
-- **Load Master**: load@balanceiq.com / demo123
-- **Maintenance**: maint@balanceiq.com / demo123
 
 ## Phase 6: Advanced Features Configuration
 
@@ -424,23 +224,3 @@ ENABLE_COMPLIANCE_REPORTING=true
 ENABLE_PREDICTIVE_ANALYTICS=false
 ENABLE_MOBILE_INTEGRATION=false
 ```
-
----
-
-**Ready for enterprise deployment with proven $545K annual value per aircraft**
-
-*Complete system delivering fuel savings, operational efficiency, compliance automation, and maintenance optimization through intelligent cargo loading.*
-
-## Security & Quality Assurance
-
-### Security Compliance Score: 95/100 ✅
-- **No critical vulnerabilities** detected
-- **Enterprise-grade secret management** implemented
-- **Comprehensive infrastructure security** baseline
-- **Code quality standards** enforced
-
-### Monitoring & Observability
-- **Tier 1 application** monitoring with CloudWatch
-- **Real-time alerting** with configurable thresholds
-- **Business metrics tracking** for ROI measurement
-- **Performance monitoring** with sub-second response times

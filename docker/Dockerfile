@@ -30,6 +30,7 @@ COPY src/ ./src/
 COPY api/ ./api/
 COPY services/ ./services/
 COPY data/ ./data/
+COPY balanceiq_baggage_demo/ ./balanceiq_baggage_demo/
 COPY main.py .
 
 # Create data directory for SQLite
