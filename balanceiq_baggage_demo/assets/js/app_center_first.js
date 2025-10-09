@@ -485,8 +485,7 @@
       cells
     };
 
-    try{ localStorage.setItem('balanceiq-supervisor', JSON.stringify(snapshot)); }catch(e){}
-  }
+    try{ localStorage.setItem('balanceiq-supervisor', JSON.stringify(snapshot)); if (snapshot.flightNumber) { localStorage.setItem(`balanceiq-supervisor:${snapshot.flightNumber}`, JSON.stringify(snapshot)); } }catch(e){}}
   window.__balanceiqPersist = ()=>persistSupervisorSnapshot(true);
 
   // ------------ Boot ------------

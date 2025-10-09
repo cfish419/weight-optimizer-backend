@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
     .super-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
-    .bay{border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:#fff}
+    .bay{border:1px solid #e5e7eb;border-radius:12px;padding:12px}
     .bay h3{margin:0 0 8px 0}
     .zones{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .cell{border:1px solid #e5e7eb;border-radius:10px;padding:8px;background:#fafafa}
+    .cell{border:1px solid #e5e7eb;border-radius:10px;padding:8px}
     .row{display:flex;gap:8px;align-items:center}
     .bar{height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-top:6px}
     .fill{height:100%;width:0%}
@@ -18,7 +18,6 @@
     .fill.yellow{background:var(--yellow)}
     .fill.blue{background:var(--blue)}
     .meta{font-size:12px;color:#64748b}
-    .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid #e5e7eb;border-radius:999px;padding:4px 10px;font-size:12px;color:#334155}
   </style>
 </head>
 <body>
@@ -30,16 +29,15 @@
 
 <main class="container">
   <h1>Supervisor</h1>
-  <p class="sub">Live snapshot from Loader, or choose a flight to load a flight-specific snapshot (legacy snapshots are auto-rebuilt with center-first loading).</p>
+  <p class="sub">Live snapshot from Loader, or choose a flight to compute loads directly from the manifest.</p>
 
   <div class="card">
     <div class="controls" style="display:flex;gap:8px;flex-wrap:wrap">
       <button id="sync-btn" class="secondary">Sync now</button>
       <a id="clear-cache" class="ghost">Clear cached snapshot</a>
-      <select id="super-flight-select" style="min-width:260px">
+      <select id="super-flight-select" style="min-width:240px">
         <option value="">Loader Snapshot (default)</option>
       </select>
-      <div id="snap-pill" class="pill">No snapshot yet</div>
     </div>
     <div id="last-upd" class="meta" style="margin-top:6px"></div>
     <div id="summary" class="meta" style="margin-top:6px"></div>
@@ -75,8 +73,7 @@
 </main>
 
 <script>
-  const LATEST_KEY = 'balanceiq-supervisor';
-  const flightKey = (fn)=> `balanceiq-supervisor:${fn}`;
+  const KEY = 'balanceiq-supervisor';
 
   async function fetchFlightData(){
     try{
@@ -84,11 +81,7 @@
       return await res.json();
     }catch(e){ console.warn('flight data fetch failed', e); return null; }
   }
-
-  function read(key){ try{ return JSON.parse(localStorage.getItem(key)||'null'); }catch(e){ return null; } }
-  function write(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
-
-  // ---- Center-first flight snapshot from manifest (fallback or rebuild) ----
+  function colorForZone(zone){ return zone==='FWD'?'red':(zone==='MID'?'yellow':(zone==='AFT'?'blue':null)); }
   function computeSnapshotFromManifest(man){
     if(!man) return null;
     const kg2lb = kg=>kg*2.20462;
@@ -100,43 +93,30 @@
       'AFT.LEFT.2':{count:0, weightLb:0}, 'AFT.RIGHT.2':{count:0, weightLb:0},
       'AFT.LEFT.3':{count:0, weightLb:0}, 'AFT.RIGHT.3':{count:0, weightLb:0},
     };
-    const order = {FWD:[3,2,1], AFT:[1,2,3]}; // center-first
-    const areaW = {FWD:0, AFT:0};
-    const zoneW = {FWD:{1:0,2:0,3:0}, AFT:{1:0,2:0,3:0}};
     const rr = {'FWD.1':'LEFT','FWD.2':'LEFT','FWD.3':'LEFT','AFT.1':'LEFT','AFT.2':'LEFT','AFT.3':'LEFT'};
     const flip = s => s === 'LEFT' ? 'RIGHT' : 'LEFT';
 
-    const checked = (man.baggage||[]).filter(b=>b.status==='CHECKED_IN').slice()
-      .sort((a,b)=> (b.weight_kg||0)-(a.weight_kg||0)); // heavy first
-
+    const checked = man.baggage.filter(b=>b.status==='CHECKED_IN');
+    const bins = {FWD:0, MID:0, AFT:0};
+    let midToFront = true;
     let totalLb = 0;
     for(const b of checked){
-      const lb = kg2lb(Number(b.weight_kg||0));
-      totalLb += lb;
-
-      // send to lighter hold
-      const area = areaW.FWD <= areaW.AFT ? 'FWD' : 'AFT';
-
-      // pick zone with least weight (tie → center-first)
-      let chosen = order[area][0], best = Infinity;
-      for(const z of order[area]){
-        const w = zoneW[area][z];
-        if(w < best){ best = w; chosen = z; }
-      }
-
-      const key = `${area}.${chosen}`;
+      const kg = Number(b.weight_kg||0);
+      const lb = kg2lb(kg); totalLb += lb;
+      const target = Object.entries(bins).sort((a,b)=> a[1]-b[1])[0][0]; // naive optimize
+      bins[target] += kg;
+      const color = colorForZone(target);
+      const zoneNum = (color==='red'?1:(color==='yellow'?2:(color==='blue'?3:null)));
+      let area = target==='AFT'?'AFT':(target==='FWD'?'FWD':null);
+      if(!area){ area = midToFront ? 'FWD' : 'AFT'; midToFront = !midToFront; }
+      const key = `${area}.${zoneNum}`;
       const side = rr[key]; rr[key] = flip(side);
-
-      const cellKey = `${area}.${side}.${chosen}`;
+      const cellKey = `${area}.${side}.${zoneNum}`;
       cells[cellKey].count += 1;
       cells[cellKey].weightLb += lb;
-
-      areaW[area] += lb;
-      zoneW[area][chosen] += lb;
     }
-
     return {
-      version: 4,
+      version: 3,
       perCellCap: 20,
       ts: Date.now(),
       flightNumber: man.flight?.flight_number || null,
@@ -145,114 +125,71 @@
     };
   }
 
-  // If cached snapshot is missing or legacy (v<4), rebuild it
-  function getFlightSnapshot(fn, data){
-    const cached = read(flightKey(fn));
-    if(cached && Number(cached.version) >= 4) return cached;
-    const man = (data?.manifests||[]).find(m => m.flight?.flight_number === fn);
-    const snap = computeSnapshotFromManifest(man);
-    if(snap) write(flightKey(fn), snap);
-    return snap;
+  function readSnap(){
+    try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return null; }
   }
 
-  function setCell(area, side, zone, bags, weight, maxW){
-    const fill = document.getElementById(`${area}.${side}.${zone}`);
-    const meta = document.getElementById(`${area}.${side}.${zone}-meta`);
-    if(fill) fill.style.width = Math.max(0, Math.min(100, Math.round((weight||0)/(maxW||1)*100))) + '%';
-    if(meta) meta.textContent = `${bags||0} • ${Math.round(weight||0)} lb`;
-  }
-
-  function renderSnapshot(snap, rebuiltNote){
+  function render(){
+    const snap = readSnap();
     const lu = document.getElementById('last-upd');
     const sum = document.getElementById('summary');
-    const pill = document.getElementById('snap-pill');
-
     if(!snap){
       if(lu) lu.textContent = 'No snapshot';
       if(sum) sum.textContent = '';
-      if(pill) pill.textContent = 'No snapshot';
       Array.from(document.querySelectorAll('.fill')).forEach(el=> el.style.width='0%');
       Array.from(document.querySelectorAll('[id$="-meta"]')).forEach(el=> el.textContent='');
       return;
     }
-    const rebuilt = rebuiltNote ? ' • rebuilt v4' : '';
-    if(lu) lu.textContent = `Last update: ${new Date(snap.ts||Date.now()).toLocaleTimeString()} ${snap.flightNumber? '• Flight '+snap.flightNumber : ''}${rebuilt}`;
+    if(lu) lu.textContent = `Last update: ${new Date(snap.ts||Date.now()).toLocaleTimeString()} ${snap.flightNumber? '• Flight '+snap.flightNumber : ''}`;
     if(sum) sum.textContent = `${snap.totals?.bags||0} bags • ${Math.round(Number(snap.totals?.weightLb||0))} lb`;
-    if(pill) pill.textContent = snap.flightNumber ? `Snapshot: ${snap.flightNumber}` : 'Snapshot: latest';
 
+    // Scale bars relative to the max cell weight to give a visual distribution
     const weights = Object.values(snap.cells||{}).map(c=>c.weightLb||0);
     const maxW = Math.max(1, ...weights);
-
-    setCell('FWD','LEFT',1, snap.cells['FWD.LEFT.1']?.count,  snap.cells['FWD.LEFT.1']?.weightLb,  maxW);
-    setCell('FWD','LEFT',2, snap.cells['FWD.LEFT.2']?.count,  snap.cells['FWD.LEFT.2']?.weightLb,  maxW);
-    setCell('FWD','LEFT',3, snap.cells['FWD.LEFT.3']?.count,  snap.cells['FWD.LEFT.3']?.weightLb,  maxW);
-    setCell('FWD','RIGHT',1, snap.cells['FWD.RIGHT.1']?.count, snap.cells['FWD.RIGHT.1']?.weightLb, maxW);
-    setCell('FWD','RIGHT',2, snap.cells['FWD.RIGHT.2']?.count, snap.cells['FWD.RIGHT.2']?.weightLb, maxW);
-    setCell('FWD','RIGHT',3, snap.cells['FWD.RIGHT.3']?.count, snap.cells['FWD.RIGHT.3']?.weightLb, maxW);
-
-    setCell('AFT','LEFT',1, snap.cells['AFT.LEFT.1']?.count,  snap.cells['AFT.LEFT.1']?.weightLb,  maxW);
-    setCell('AFT','LEFT',2, snap.cells['AFT.LEFT.2']?.count,  snap.cells['AFT.LEFT.2']?.weightLb,  maxW);
-    setCell('AFT','LEFT',3, snap.cells['AFT.LEFT.3']?.count,  snap.cells['AFT.LEFT.3']?.weightLb,  maxW);
-    setCell('AFT','RIGHT',1, snap.cells['AFT.RIGHT.1']?.count, snap.cells['AFT.RIGHT.1']?.weightLb, maxW);
-    setCell('AFT','RIGHT',2, snap.cells['AFT.RIGHT.2']?.count, snap.cells['AFT.RIGHT.2']?.weightLb, maxW);
-    setCell('AFT','RIGHT',3, snap.cells['AFT.RIGHT.3']?.count, snap.cells['AFT.RIGHT.3']?.weightLb, maxW);
+    for(const id of Object.keys(snap.cells||{})){
+      const c = snap.cells[id];
+      const pct = Math.max(0, Math.min(100, Math.round((c.weightLb||0)/maxW*100)));
+      const fill = document.getElementById(id);
+      const meta = document.getElementById(id+'-meta');
+      if(fill) fill.style.width = pct + '%';
+      if(meta) meta.textContent = `${c.count||0} • ${Math.round(c.weightLb||0)} lb`;
+    }
   }
 
-  (async function init(){
+  // Controls
+  document.getElementById('sync-btn')?.addEventListener('click', render);
+  document.getElementById('clear-cache')?.addEventListener('click', ()=>{ localStorage.removeItem(KEY); render(); });
+
+  // Flight dropdown (compute from JSON)
+  (async function initFlightSwitcher(){
     const data = await fetchFlightData();
     const sel = document.getElementById('super-flight-select');
     if(sel && data?.flights){
-      for(const f of data.flights.slice().sort((a,b)=> a.flight_number.localeCompare(b.flight_number))){
-        const o = document.createElement('option');
-        o.value = f.flight_number;
-        o.textContent = `${f.flight_number} (${f.departure}→${f.arrival})`;
-        sel.appendChild(o);
+      // options
+      const flights = data.flights.slice().sort((a,b)=> a.flight_number.localeCompare(b.flight_number));
+      for(const f of flights){
+        const opt = document.createElement('option');
+        opt.value = f.flight_number;
+        opt.textContent = `${f.flight_number} (${f.departure}→${f.arrival})`;
+        sel.appendChild(opt);
       }
-    }
-
-    // Initial render = latest snapshot
-    renderSnapshot(read(LATEST_KEY));
-
-    sel?.addEventListener('change', (e)=>{
-      const fn = e.target.value;
-      if(!fn){ renderSnapshot(read(LATEST_KEY)); return; }
-      const cached = read(flightKey(fn));
-      if(!cached || Number(cached.version) < 4){
-        const snap = getFlightSnapshot(fn, data);
-        renderSnapshot(snap, true);
-      }else{
-        renderSnapshot(cached, false);
-      }
-    });
-
-    document.getElementById('sync-btn')?.addEventListener('click', ()=>{
-      const fn = sel?.value || '';
-      if(fn){
-        const cached = read(flightKey(fn));
-        if(!cached || Number(cached.version) < 4){
-          const snap = getFlightSnapshot(fn, data);
-          renderSnapshot(snap, true);
-        }else{
-          renderSnapshot(cached, false);
+      sel.addEventListener('change', (e)=>{
+        const val = e.target.value;
+        if(!val){ render(); return; }
+        const man = (data?.manifests||[]).find(m=> m.flight?.flight_number===val);
+        const snap = computeSnapshotFromManifest(man);
+        if(snap){
+          try{ localStorage.setItem(KEY, JSON.stringify(snap)); }catch(_){}
         }
-      }else{
-        renderSnapshot(read(LATEST_KEY));
-      }
-    });
-
-    document.getElementById('clear-cache')?.addEventListener('click', ()=>{
-      const fn = sel?.value || '';
-      if(fn){ localStorage.removeItem(flightKey(fn)); renderSnapshot(null); }
-      else { localStorage.removeItem(LATEST_KEY); renderSnapshot(null); }
-    });
-
-    // Cross-tab updates from loader
-    window.addEventListener('storage', (ev)=>{
-      const fn = sel?.value || '';
-      if(fn && ev.key === flightKey(fn)) renderSnapshot(read(flightKey(fn)));
-      if(!fn && ev.key === LATEST_KEY)   renderSnapshot(read(LATEST_KEY));
-    });
+        render();
+      });
+    }
   })();
+
+  // Live updates
+  setInterval(render, 2000);
+  window.addEventListener('storage', (e)=>{ if(e.key===KEY) render(); });
+  render();
 </script>
 </body>
 </html>
