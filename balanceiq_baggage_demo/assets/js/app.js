@@ -311,20 +311,28 @@
     setText('kpi-mid', fmtLb(kgToLb(totals.MID)));
     setText('kpi-aft', fmtLb(kgToLb(totals.AFT)));
 
-    // CG
-    const total = totals.total || 1;
-    const cg = (2*totals.AFT + 1*totals.MID + 0*totals.FWD)/total;
-    const cgNorm = clamp((cg+1)/3*100, 0, 100);
-    setText('cg-value', cg.toFixed(2) + ' m');
-    setLeft('cg-needle', `${cgNorm}%`);
-    const statusEl = get('cg-status');
-    if (statusEl) {
-      const ok = (cg >= 0.5 && cg <= 1.4);
-      statusEl.textContent = ok ? 'IN RANGE' : 'OUT OF RANGE';
-      statusEl.style.color = ok ? 'var(--green)' : 'var(--red)';
-    }
+    
+  // CG
 
-    // Fuel savings with flight hours -> convert KG to GALLONS
+  // CG as %MAC (demo mapping). We map internal 0–2 metric → 20–32 %MAC.
+  const ENVELOPE = { min: 20, max: 32, target: 26 };
+  const total = totals.total || 1;
+  const cgMetric = (2*totals.AFT + 1*totals.MID + 0*totals.FWD)/total; // 0(front)..2(tail)
+  const cgPct = ENVELOPE.min + (cgMetric/2) * (ENVELOPE.max - ENVELOPE.min);
+
+  setText('cg-value', cgPct.toFixed(1) + '% MAC');
+  const posPct = clamp(((cgPct - ENVELOPE.min) / (ENVELOPE.max - ENVELOPE.min)) * 100, 0, 100);
+  setLeft('cg-needle', `${posPct}%`);
+  const statusEl = get('cg-status');
+  if (statusEl) {
+    const ok = (cgPct >= ENVELOPE.min && cgPct <= ENVELOPE.max);
+    statusEl.textContent = ok ? 'IN RANGE' : 'OUT OF RANGE';
+    statusEl.style.color = ok ? 'var(--green)' : 'var(--red)';
+  }
+  const cap = document.getElementById('cg-caption');
+  if (cap) cap.textContent = `Target ${ENVELOPE.target}% MAC | Envelope ${ENVELOPE.min}–${ENVELOPE.max}% (demo)`;
+
+// Fuel savings with flight hours -> convert KG to GALLONS
     const routeEl = get('fuel-route');
     const hours = state.flightInfo?.hours ?? 1.8;
     const routeTxt = (state.flightInfo?.dep && state.flightInfo?.arr) ? `${state.flightInfo.dep}→${state.flightInfo.arr}` : '-';
@@ -333,7 +341,7 @@
     const meanW = (totals.FWD + totals.MID + totals.AFT)/3;
     const sd = Math.sqrt(((Math.pow(totals.FWD-meanW,2)+Math.pow(totals.MID-meanW,2)+Math.pow(totals.AFT-meanW,2))/3)) || 0;
     const imbalanceNorm = clamp(sd/(meanW||1), 0, 1);
-    const cgErrNorm = clamp(Math.abs(cg-1.0)/2.0, 0, 1); // normalize to 2-arm span
+    const cgErrNorm = clamp(Math.abs(cgMetric-1.0)/2.0, 0, 1); // normalize to 2-arm span
 
     const extraBurnFrac = Math.min(FUEL.cap, FUEL.kImbalance*imbalanceNorm + FUEL.kCg*cgErrNorm);
     const fuelSavedKg = FUEL.burnKgPerHr * hours * extraBurnFrac;

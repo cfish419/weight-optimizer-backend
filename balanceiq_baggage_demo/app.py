@@ -11,6 +11,10 @@ def index():
 def supervisor():
     return render_template('supervisor.html')
 
+@app.route('/ramp')  # NEW: Ramp page route
+def ramp():
+    return render_template('ramp.html')
+
 # Helpful redirects if someone types the .html filenames
 @app.route('/index.html')
 def index_html():
@@ -19,6 +23,10 @@ def index_html():
 @app.route('/supervisor.html')
 def supervisor_html():
     return redirect('/supervisor', code=301)
+
+@app.route('/ramp.html')  # NEW: Redirect to /ramp
+def ramp_html():
+    return redirect('/ramp', code=301)
 
 # Serve assets from /assets/*
 @app.route('/assets/<path:path>')
