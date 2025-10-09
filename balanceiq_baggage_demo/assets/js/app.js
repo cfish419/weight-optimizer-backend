@@ -17,11 +17,11 @@
     D:  0.20     // density-at-ends penalty
   };
   const FUEL = {
-    burnKgPerHr: 2400,   // demo for 737-class
+    burnKgPerHr: 2550,   // demo for 737-class
     kgPerGal: 3.05,      // Jet-A ~ 6.7 lb/gal -> ~3.04 kg/gal
-    pricePerGal: 3.00,   // $/gal
+    pricePerGal: 2.90,   // $/gal
     kImbalance: 0.02,    // penalty weights
-    kCg: 0.01,
+    kCg: 0.033,
     cap: 0.08            // cap at +8% extra burn
   };
 
