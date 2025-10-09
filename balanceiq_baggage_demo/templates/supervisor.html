@@ -51,6 +51,7 @@
         <option value="">Loader Snapshot (default)</option>
       </select>
       <div id="snap-pill" class="pill">No snapshot yet</div>
+      <div id="sync-indicator" class="pill" style="background:#e0f2fe;color:#0369a1;display:none">🔄 Auto-syncing...</div>
     </div>
     <div id="last-upd" class="meta" style="margin-top:6px"></div>
     <div id="summary" class="meta" style="margin-top:6px"></div>
@@ -358,7 +359,18 @@
       }
     });
 
-    document.getElementById('sync-btn')?.addEventListener('click', ()=>{
+    // Sync function
+    function syncData(isManual = false) {
+      const syncBtn = document.getElementById('sync-btn');
+      const syncIndicator = document.getElementById('sync-indicator');
+      
+      if (isManual && syncBtn) {
+        syncBtn.textContent = 'Syncing...';
+        syncBtn.disabled = true;
+      } else if (!isManual && syncIndicator) {
+        syncIndicator.style.display = 'inline-flex';
+      }
+      
       const fn = sel?.value || '';
       if(fn){
         const cached = read(flightKey(fn));
@@ -374,7 +386,24 @@
         const manL = (data?.manifests||[]).find(m=> m.flight?.flight_number===latest?.flightNumber);
         renderSnapshot(latest, false, manL || null);
       }
-    });
+      
+      if (isManual && syncBtn) {
+        setTimeout(() => {
+          syncBtn.textContent = 'Sync now';
+          syncBtn.disabled = false;
+        }, 500);
+      } else if (!isManual && syncIndicator) {
+        setTimeout(() => {
+          syncIndicator.style.display = 'none';
+        }, 300);
+      }
+    }
+
+    // Manual sync button
+    document.getElementById('sync-btn')?.addEventListener('click', () => syncData(true));
+
+    // Auto-sync every 2 seconds
+    setInterval(() => syncData(false), 2000);
 
     document.getElementById('clear-cache')?.addEventListener('click', ()=>{
       const fn = sel?.value || '';

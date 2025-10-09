@@ -19,7 +19,7 @@
   const FUEL = {
     burnKgPerHr: 2400,   // demo for 737-class
     kgPerGal: 3.05,      // Jet-A ~ 6.7 lb/gal -> ~3.04 kg/gal
-    pricePerGal: 2.75,   // $/gal
+    pricePerGal: 3.00,   // $/gal
     kImbalance: 0.02,    // penalty weights
     kCg: 0.01,
     cap: 0.08            // cap at +8% extra burn
