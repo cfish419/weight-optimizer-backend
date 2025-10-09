@@ -213,10 +213,40 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 - 12 minutes loading time reduction
 
 ### Gate Check Crisis Management
-- Last-minute baggage additions
+- Last-minute baggage additions at gate
 - Real-time recalculation and rebalancing
 - Prevents $15,000 delay costs
 - Maintains fuel efficiency optimization
+
+### Weather Impact Scenarios
+- Hot weather performance degradation (Denver summer)
+- Crosswind limitations affecting weight distribution
+- De-icing fluid weight calculations (winter operations)
+- Storm avoidance fuel adjustments
+
+### Aircraft Swap Operations
+- 737-800 to 737-MAX8 substitution
+- Different weight/balance characteristics
+- Passenger/cargo redistribution requirements
+- Real-time recalculation across all systems
+
+### Emergency Weight Reduction
+- Medical emergency requiring immediate departure
+- Cargo removal priority sequencing
+- 2,000kg reduction in 15 minutes
+- Maintains passenger safety and comfort
+
+### Passenger No-Show Scenarios
+- Last-minute passenger cancellations
+- Baggage removal coordination
+- Weight/balance impact assessment
+- Fuel optimization opportunities
+
+### Connecting Flight Operations
+- Baggage transfers between aircraft
+- Missed connection baggage handling
+- International to domestic transfers
+- Real-time weight tracking
 
 ### Special Baggage Handling
 - Golf clubs, skis, wheelchairs, instruments
@@ -234,6 +264,7 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 
 - **[Project Summary](PROJECT_SUMMARY.md)**: Comprehensive project documentation
 - **[Final Architecture](docs/FINAL_ARCHITECTURE_SUMMARY.md)**: Complete system architecture with corrected diagrams
+- **[Operational Scenarios](docs/OPERATIONAL_SCENARIOS.md)**: Comprehensive scenario handling documentation
 - **[Infrastructure Guide](docs/INFRASTRUCTURE_GUIDE.md)**: AWS deployment and CI/CD setup
 - **[System Architecture](docs/architecture/COMPLETE_SYSTEM_ARCHITECTURE.md)**: Detailed technical architecture
 - **[Frontend Design](docs/FRONTEND_DESIGN_SPECIFICATION.md)**: UI/UX specifications and business value integration
@@ -280,6 +311,10 @@ Optimizes Boeing 737 cargo loading by calculating optimal Center of Gravity (CoG
 IoT Sensors → MQTT → Device Manager → Core Engine → Database
      ↓         ↓         ↓            ↓           ↓
 Mobile Apps → API → Application Layer → Sync → WebSocket → All Agents
+     ↓         ↓         ↓            ↓           ↓
+Weather APIs → Scenario Service → Weight Calculator → Real-time Updates
+     ↓         ↓         ↓            ↓           ↓
+Airline DCS → Integration Engine → FAA Validator → Compliance Reports
 ```
 
 ## Contributing
@@ -293,6 +328,8 @@ This project follows a phased development approach with clean separation of conc
 5. **Frontend** (`frontend/`): User interfaces and visualization
 6. **Infrastructure** (`infrastructure/`): Terraform modules and environments
 7. **IoT Integration** (`devices/`): Sensor and device management
+8. **Scenario Handling** (`services/scenario_service.py`): Operational change management
+9. **Weather Integration** (`services/weather_service.py`): Weather impact analysis
 
 ## License
 
