@@ -1,120 +1,127 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BalanceIQ | WB Demo</title>
-  <link rel="stylesheet" href="/assets/css/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BalanceIQ | WB Demo</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
+
 <body>
 <header class="header">
   <img src="/assets/images/southwest_logo.png" alt="Southwest logo">
   <div class="brand-text">| BalanceIQ</div>
-  <a href="/supervisor" class="hdr-link">Supervisor</a>
+
+  <nav class="hdr-nav">
+    <a href="/supervisor" class="hdr-link">Supervisor</a>
+    <a href="/ramp" class="hdr-link">Ramp</a>
+  </nav>
 </header>
 
-<main class="container">
-  <h1>BalanceIQ</h1>
-  <p class="sub">Pick a flight to auto-fill the plan from checked-in baggage. Dimensions from the manifest are converted to volume and density to help zone assignment. Fuel savings now use estimated flight time from the route.</p>
+    <main class="container">
+        <h1>BalanceIQ</h1>
+        <p class="sub">Select a flight to auto fill the plan from checked-in baggage.</p>
 
-  <section class="card">
-    <h2>Flight & Passenger</h2>
-    <div class="row" style="gap:8px; flex-wrap:wrap">
-      <input id="flight-filter" type="text" placeholder="Filter by flight number (e.g., WN123)" style="min-width:180px" />
-      <label for="flight-select" class="sr-only">Flight</label>
-      <select id="flight-select" style="min-width:220px">
+        <section class="card">
+            <h2>Flight & Passenger</h2>
+            <div class="row" style="gap:8px; flex-wrap:wrap">
+                <input id="flight-filter" type="text" placeholder="Filter by flight number (e.g., WN123)" style="min-width:180px" />
+                <label for="flight-select" class="sr-only">Flight</label>
+                <select id="flight-select" style="min-width:220px">
         <option value="">Select flight…</option>
       </select>
-      <div id="flight-meta" class="pill" style="display:none"></div>
-    </div>
+                <div id="flight-meta" class="pill" style="display:none"></div>
+            </div>
 
-    <div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap">
-      <label for="passenger-select" class="sr-only">Passenger</label>
-      <select id="passenger-select" style="min-width:240px" disabled>
+            <div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap">
+                <label for="passenger-select" class="sr-only">Passenger</label>
+                <select id="passenger-select" style="min-width:240px" disabled>
         <option value="">Select passenger…</option>
       </select>
-      <button id="prefill-passenger" class="secondary" disabled>Prefill</button>
-      <div id="pax-meta" class="pill" style="display:none"></div>
-    </div>
-  </section>
+                <button id="prefill-passenger" class="secondary" disabled>Prefill</button>
+                <div id="pax-meta" class="pill" style="display:none"></div>
+            </div>
+        </section>
 
-  <div class="grid">
-    <section class="card">
-      <h2>Add Bags</h2>
-      <div class="row">
-        <input id="weight" type="number" step="0.1" placeholder="Weight">
-        <select id="units"><option value="lb">lb</option><option value="kg">kg</option></select>
-        <input id="volume" type="number" step="0.1" placeholder="Volume (L, optional)">
-        <button id="add-btn">Add Bag</button>
-        <button class="secondary" id="seed-btn">Demo Fill</button>
-        <button class="secondary" id="reset-btn">Reset</button>
-      </div>
+        <div class="grid">
+            <section class="card">
+                <h2>Add Bags</h2>
+                <div class="row">
+                    <input id="weight" type="number" step="0.1" placeholder="Weight">
+                    <select id="units"><option value="lb">lb</option><option value="kg">kg</option></select>
+                    <input id="volume" type="number" step="0.1" placeholder="Volume (L, optional)">
+                    <button id="add-btn">Add Bag</button>
+                    <button class="secondary" id="seed-btn">Demo Fill</button>
+                    <button class="secondary" id="reset-btn">Reset</button>
+                </div>
 
-      <div class="kpi" style="margin-top:14px">
-        <div class="pill">Flight: <strong id="kpi-flight">-</strong></div>
-        <div class="pill">Total: <strong id="kpi-total">0 lb</strong></div>
-        <div class="pill">FWD: <strong id="kpi-fwd">0 lb</strong></div>
-        <div class="pill">MID: <strong id="kpi-mid">0 lb</strong></div>
-        <div class="pill">AFT: <strong id="kpi-aft">0 lb</strong></div>
-      </div>
+                <div class="kpi" style="margin-top:14px">
+                    <div class="pill">Flight: <strong id="kpi-flight">-</strong></div>
+                    <div class="pill">Total: <strong id="kpi-total">0 lb</strong></div>
+                    <div class="pill">FWD: <strong id="kpi-fwd">0 lb</strong></div>
+                    <div class="pill">MID: <strong id="kpi-mid">0 lb</strong></div>
+                    <div class="pill">AFT: <strong id="kpi-aft">0 lb</strong></div>
+                </div>
 
-      <div class="legend" style="margin-top:10px">
-        <span class="swatch" style="background:var(--red)"></span> Red
-        <span class="swatch" style="background:var(--yellow)"></span> Yellow
-        <span class="swatch" style="background:var(--blue)"></span> Blue
-      </div>
-    </section>
+                <div class="legend" style="margin-top:10px">
+                    <span class="swatch" style="background:var(--red)"></span> Red
+                    <span class="swatch" style="background:var(--yellow)"></span> Yellow
+                    <span class="swatch" style="background:var(--blue)"></span> Blue
+                </div>
+            </section>
 
-    <section class="card">
-      <h2>CG Summary</h2>
-      <div class="row">
-        <div>CG: <strong id="cg-value">-</strong></div>
-        <div id="cg-status" style="margin-left:10px; font-weight:700">-</div>
-      </div>
-      <div class="cgbar" id="cg-bar">
-        <div class="range"></div>
-        <div class="needle" id="cg-needle" style="left:0%"></div>
-      </div>
-      <div style="margin-top:8px; font-size:12px; color:#64748b">
-        Target 7.0 m | Envelope 5.5–8.5 m (demo values)
-      </div>
-      <div style="margin-top:12px">
-        <button id="optimize-btn">Optimize</button>
-        <button class="ghost" id="labels-btn">Print Labels</button>
-      </div>
-    </section>
+            <section class="card">
+                <h2>CG Summary</h2>
+                <div class="row">
+                    <div>CG: <strong id="cg-value">-</strong></div>
+                    <div id="cg-status" style="margin-left:10px; font-weight:700">-</div>
+                </div>
+                <div class="cgbar" id="cg-bar">
+                    <div class="range"></div>
+                    <div class="needle" id="cg-needle" style="left:0%"></div>
+                </div>
+<div id="cg-caption" style="margin-top:8px; font-size:12px; color:#64748b">
+  Target 26% MAC | Envelope 20–32% (demo)
+</div>
+                <div style="margin-top:12px">
+                    <button id="optimize-btn">Optimize</button>
+                    <button class="ghost" id="labels-btn">Print Labels</button>
+                </div>
+            </section>
 
-    <section class="card">
-      <h2>Estimated Fuel Savings</h2>
-      <div class="meta" id="fuel-route">Route: -</div>
-      <div style="font-size:28px; font-weight:800;" id="fuel-savings-amt">$0</div>
-      <div class="sub" id="fuel-savings-sub">Assumes reduced trim drag from balanced load.</div>
-      <div class="meta" id="fuel-savings-details"></div>
-    </section>
-  </div>
+            <section class="card">
+                <h2>Estimated Fuel Savings</h2>
+                <div class="meta" id="fuel-route">Route: -</div>
+                <div style="font-size:28px; font-weight:800;" id="fuel-savings-amt">$0</div>
+                <div class="sub" id="fuel-savings-sub">Assumes reduced trim drag from balanced load.</div>
+                <div class="meta" id="fuel-savings-details"></div>
+            </section>
+        </div>
 
-  <section class="card" style="margin-top:16px">
-    <h2>Plan</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Tag / Passenger</th>
-          <th>Weight</th>
-          <th>Dims (cm)</th>
-          <th>Volume (L)</th>
-          <th>Density (kg/L)</th>
-          <th>Zone</th>
-          <th>Load</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="bag-rows"></tbody>
-    </table>
-  </section>
+        <section class="card" style="margin-top:16px">
+            <h2>Plan</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag / Passenger</th>
+                        <th>Weight</th>
+                        <th>Dims (cm)</th>
+                        <th>Volume (L)</th>
+                        <th>Density (kg/L)</th>
+                        <th>Zone</th>
+                        <th>Load</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="bag-rows"></tbody>
+            </table>
+        </section>
 
-  <footer>© 2025 | Source: Trust Me</footer>
-</main>
+        <footer>© 2025 | Source: Trust Me</footer>
+    </main>
 
-<script src="/assets/js/app.js"></script>
+    <script src="/assets/js/app.js"></script>
 </body>
+
 </html>

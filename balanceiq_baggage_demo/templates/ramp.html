@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BalanceIQ | Ramp</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .page{max-width:1100px;margin:20px auto;padding:0 16px}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+    .controls select{min-width:260px}
+    .label-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media (max-width: 900px){ .label-wrap{grid-template-columns:1fr 1fr} }
+    @media (max-width: 640px){ .label-wrap{grid-template-columns:1fr} }
+    .lbl{border-radius:14px;overflow:hidden;border:1px solid #e5e7eb}
+    .lbl .hdr{height:12px}
+    .lbl .body{padding:12px 14px}
+    .lbl .body .line{margin:3px 0;font-size:14px}
+    .lbl .zone{display:inline-block;margin-top:8px;font-size:12px;border-radius:999px;padding:4px 10px;background:#111827;color:#fff}
+    .red{background:#fee2e2}.hdr.red{background:#ef4444}
+    .yellow{background:#fef3c7}.hdr.yellow{background:#f59e0b}
+    .blue{background:#e0e7ff}.hdr.blue{background:#3b82f6}
+  </style>
+</head>
+<body>
+<header class="header">
+  <img src="/assets/images/southwest_logo.png" alt="Southwest logo">
+  <div class="brand-text">| BalanceIQ</div>
+  <a href="/" class="hdr-link">Loader</a>
+  <a href="/supervisor" class="hdr-link">Supervisor</a>
+</header>
+
+<main class="container">
+  <h1>Ramp</h1>
+  <p class="sub">Select flight and passenger.</p>
+
+  <section class="card">
+    <h2>Scan (demo selectors)</h2>
+    <div class="controls">
+      <label class="sr-only" for="ramp-flight">Flight</label>
+      <select id="ramp-flight"></select>
+      <label class="sr-only" for="ramp-passenger">Passenger</label>
+      <select id="ramp-passenger" disabled><option value="">Select passenger…</option></select>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <h2>Bag Label</h2>
+    <div id="labels" class="label-wrap"></div>
+  </section>
+</main>
+
+<script src="/assets/js/ramp.js"></script>
+</body>
+</html>

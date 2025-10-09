@@ -19,18 +19,29 @@
     .fill.blue{background:var(--blue)}
     .meta{font-size:12px;color:#64748b}
     .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid #e5e7eb;border-radius:999px;padding:4px 10px;font-size:12px;color:#334155}
+    /* New cards */
+    .cards-ops{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+    .cardx{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px}
+    .cardx h3{margin:0 0 8px 0}
+    .big{font-size:28px;font-weight:800}
+    .progress{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+    .progress > .pfill{height:100%;width:0%}
+    .pfill.green{background:#16a34a}
+    .pfill.indigo{background:#6366f1}
+    .mini{font-size:12px;color:#475569}@media (max-width: 980px){ .super-grid{grid-template-columns:1fr} .cards-ops{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
 <header class="header">
   <img src="/assets/images/southwest_logo.png" alt="Southwest logo">
-  <div class="brand-text">| BalanceIQ Supervisor</div>
+  <div class="brand-text">| BalanceIQ</div>
   <a href="/" class="hdr-link">Loader</a>
+  <a href="/ramp" class="hdr-link">Ramp</a>
 </header>
 
 <main class="container">
   <h1>Supervisor</h1>
-  <p class="sub">Live snapshot from Loader, or choose a flight to load a flight-specific snapshot (legacy snapshots are auto-rebuilt with center-first loading).</p>
+  <p class="sub">Live snapshot from Loader, or choose a flight to load a flight specific snapshot.</p>
 
   <div class="card">
     <div class="controls" style="display:flex;gap:8px;flex-wrap:wrap">
@@ -49,27 +60,46 @@
     <div class="bay">
       <h3>FWD</h3>
       <div class="zones">
-        <div class="cell"><div class="row"><strong>L1</strong><span class="meta" id="FWD.LEFT.1-meta"></span></div><div class="bar"><div class="fill red" id="FWD.LEFT.1"></div></div></div>
-        <div class="cell"><div class="row"><strong>L2</strong><span class="meta" id="FWD.LEFT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="FWD.LEFT.2"></div></div></div>
-        <div class="cell"><div class="row"><strong>L3</strong><span class="meta" id="FWD.LEFT.3-meta"></span></div><div class="bar"><div class="fill blue" id="FWD.LEFT.3"></div></div></div>
+        <div class="cell"><div class="row"><strong>A1</strong><span class="meta" id="FWD.LEFT.1-meta"></span></div><div class="bar"><div class="fill red" id="FWD.LEFT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>B1</strong><span class="meta" id="FWD.LEFT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="FWD.LEFT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>C1</strong><span class="meta" id="FWD.LEFT.3-meta"></span></div><div class="bar"><div class="fill blue" id="FWD.LEFT.3"></div></div></div>
 
-        <div class="cell"><div class="row"><strong>R1</strong><span class="meta" id="FWD.RIGHT.1-meta"></span></div><div class="bar"><div class="fill red" id="FWD.RIGHT.1"></div></div></div>
-        <div class="cell"><div class="row"><strong>R2</strong><span class="meta" id="FWD.RIGHT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="FWD.RIGHT.2"></div></div></div>
-        <div class="cell"><div class="row"><strong>R3</strong><span class="meta" id="FWD.RIGHT.3-meta"></span></div><div class="bar"><div class="fill blue" id="FWD.RIGHT.3"></div></div></div>
+        <div class="cell"><div class="row"><strong>A2</strong><span class="meta" id="FWD.RIGHT.1-meta"></span></div><div class="bar"><div class="fill red" id="FWD.RIGHT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>B2</strong><span class="meta" id="FWD.RIGHT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="FWD.RIGHT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>C2</strong><span class="meta" id="FWD.RIGHT.3-meta"></span></div><div class="bar"><div class="fill blue" id="FWD.RIGHT.3"></div></div></div>
       </div>
     </div>
 
     <div class="bay">
       <h3>AFT</h3>
       <div class="zones">
-        <div class="cell"><div class="row"><strong>L1</strong><span class="meta" id="AFT.LEFT.1-meta"></span></div><div class="bar"><div class="fill red" id="AFT.LEFT.1"></div></div></div>
-        <div class="cell"><div class="row"><strong>L2</strong><span class="meta" id="AFT.LEFT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="AFT.LEFT.2"></div></div></div>
-        <div class="cell"><div class="row"><strong>L3</strong><span class="meta" id="AFT.LEFT.3-meta"></span></div><div class="bar"><div class="fill blue" id="AFT.LEFT.3"></div></div></div>
+        <div class="cell"><div class="row"><strong>D1</strong><span class="meta" id="AFT.LEFT.1-meta"></span></div><div class="bar"><div class="fill red" id="AFT.LEFT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>E1</strong><span class="meta" id="AFT.LEFT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="AFT.LEFT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>F1</strong><span class="meta" id="AFT.LEFT.3-meta"></span></div><div class="bar"><div class="fill blue" id="AFT.LEFT.3"></div></div></div>
 
-        <div class="cell"><div class="row"><strong>R1</strong><span class="meta" id="AFT.RIGHT.1-meta"></span></div><div class="bar"><div class="fill red" id="AFT.RIGHT.1"></div></div></div>
-        <div class="cell"><div class="row"><strong>R2</strong><span class="meta" id="AFT.RIGHT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="AFT.RIGHT.2"></div></div></div>
-        <div class="cell"><div class="row"><strong>R3</strong><span class="meta" id="AFT.RIGHT.3-meta"></span></div><div class="bar"><div class="fill blue" id="AFT.RIGHT.3"></div></div></div>
+        <div class="cell"><div class="row"><strong>D2</strong><span class="meta" id="AFT.RIGHT.1-meta"></span></div><div class="bar"><div class="fill red" id="AFT.RIGHT.1"></div></div></div>
+        <div class="cell"><div class="row"><strong>E2</strong><span class="meta" id="AFT.RIGHT.2-meta"></span></div><div class="bar"><div class="fill yellow" id="AFT.RIGHT.2"></div></div></div>
+        <div class="cell"><div class="row"><strong>F2</strong><span class="meta" id="AFT.RIGHT.3-meta"></span></div><div class="bar"><div class="fill blue" id="AFT.RIGHT.3"></div></div></div>
       </div>
+    </div>
+  </div>
+
+  <!-- NEW: Ops cards -->
+  <div class="cards-ops">
+    <div class="cardx">
+      <h3>Passengers</h3>
+      <div class="big"><span id="pax-count">-</span></div>
+      <div class="mini" id="pax-aircraft">Aircraft: -</div>
+      <div class="progress" style="margin-top:8px"><div class="pfill green" id="pax-progress" style="width:0%"></div></div>
+      <div class="mini" id="pax-load">Load factor: -</div>
+    </div>
+
+    <div class="cardx">
+      <h3>Weights (est.)</h3>
+      <div class="mini" id="w-pax">Pax: -</div>
+      <div class="mini" id="w-bags">Bags: -</div>
+      <div class="mini" id="w-fuel">Fuel: -</div>
+      <div class="mini" id="w-total"><strong>Total: -</strong></div>
     </div>
   </div>
 </main>
@@ -162,7 +192,7 @@
     if(meta) meta.textContent = `${bags||0} • ${Math.round(weight||0)} lb`;
   }
 
-  function renderSnapshot(snap, rebuiltNote){
+  function renderSnapshot(snap, rebuiltNote, man){
     const lu = document.getElementById('last-upd');
     const sum = document.getElementById('summary');
     const pill = document.getElementById('snap-pill');
@@ -173,6 +203,8 @@
       if(pill) pill.textContent = 'No snapshot';
       Array.from(document.querySelectorAll('.fill')).forEach(el=> el.style.width='0%');
       Array.from(document.querySelectorAll('[id$="-meta"]')).forEach(el=> el.textContent='');
+      // Clear ops cards
+      renderOps(null, null);
       return;
     }
     const rebuilt = rebuiltNote ? ' • rebuilt v4' : '';
@@ -196,6 +228,98 @@
     setCell('AFT','RIGHT',1, snap.cells['AFT.RIGHT.1']?.count, snap.cells['AFT.RIGHT.1']?.weightLb, maxW);
     setCell('AFT','RIGHT',2, snap.cells['AFT.RIGHT.2']?.count, snap.cells['AFT.RIGHT.2']?.weightLb, maxW);
     setCell('AFT','RIGHT',3, snap.cells['AFT.RIGHT.3']?.count, snap.cells['AFT.RIGHT.3']?.weightLb, maxW);
+
+    // Render new ops cards using manifest + snapshot
+    renderOps(snap, man);
+  }
+
+  // ---- New ops cards ----
+  const AC_SEATS = {
+    '737-700': 143,
+    '737-800': 175,
+    '737 800': 175,
+    '737-8': 175,
+    '737 MAX 8': 175,
+    '737 MAX': 175
+  };
+  const AVG = { paxLb: 190 };
+  const FUEL = { burnKgPerHr: 2400, kgPerGal: 3.05 };
+  const AIRPORTS = {
+    'DAL': {lat:32.8471, lon:-96.8518}, 'HOU': {lat:29.6454, lon:-95.2789},
+    'DEN': {lat:39.8561, lon:-104.6737}, 'PHX': {lat:33.4343, lon:-112.0116},
+    'LAS': {lat:36.0840, lon:-115.1537}, 'LAX': {lat:33.9416, lon:-118.4085},
+    'SFO': {lat:37.6213, lon:-122.3790}, 'SEA': {lat:47.4502, lon:-122.3088},
+    'MDW': {lat:41.7868, lon:-87.7522}, 'BWI': {lat:39.1754, lon:-76.6684},
+    'MCO': {lat:28.4312, lon:-81.3081}, 'ATL': {lat:33.6407, lon:-84.4277},
+    'SLC': {lat:40.7899, lon:-111.9791}, 'AUS': {lat:30.1975, lon:-97.6664},
+    'SAN': {lat:32.7338, lon:-117.1933}, 'OAK': {lat:37.7126, lon:-122.2197},
+    'SMF': {lat:38.6954, lon:-121.5908}, 'STL': {lat:38.7500, lon:-90.3700},
+    'MSY': {lat:29.9934, lon:-90.2580}
+  };
+  function toRad(d){ return d*Math.PI/180; }
+  function haversineKm(a, b){
+    const R = 6371; const dLat = toRad(b.lat-a.lat), dLon = toRad(b.lon-a.lon);
+    const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*(Math.sin(dLon/2)**2);
+    return 2*R*Math.asin(Math.sqrt(s));
+  }
+  function estimateHoursForFlight(f){
+    if(!f) return 1.8;
+    if(typeof f.duration_minutes === 'number') return Math.max(0.5, f.duration_minutes/60);
+    const A = AIRPORTS[f.departure], B = AIRPORTS[f.arrival];
+    if(!A || !B) return 1.8;
+    const km = haversineKm(A,B); const cruise=780; const taxi=0.3;
+    return Math.round(((km/cruise)+taxi)*100)/100;
+  }
+  function uniquePassengersFromManifest(man){
+    if(!man) return 0;
+    const set = new Set();
+    for(const b of (man.baggage||[])){ if(b.passenger_name) set.add(b.passenger_name); }
+    return set.size;
+  }
+  function renderOps(snap, man){
+    const paxEl = document.getElementById('pax-count');
+    const acEl  = document.getElementById('pax-aircraft');
+    const pbar  = document.getElementById('pax-progress');
+    const pline = document.getElementById('plane-line');
+    const pload = document.getElementById('pax-load');
+    const wPax  = document.getElementById('w-pax');
+    const wBags = document.getElementById('w-bags');
+    const wFuel = document.getElementById('w-fuel');
+    const wTot  = document.getElementById('w-total');
+
+    if(!man){
+      if(paxEl) paxEl.textContent = '-';
+      if(acEl) acEl.textContent = 'Aircraft: -';
+      if(pload) pload.textContent = 'Load factor: -';
+      if(pbar) pbar.style.width = '0%';
+      if(pline) pline.style.width = '0%';
+      if(wPax) wPax.textContent = 'Pax: -';
+      if(wBags) wBags.textContent = 'Bags: -';
+      if(wFuel) wFuel.textContent = 'Fuel: -'; 
+      if(wTot) wTot.textContent  = 'Total: -';
+      return;
+    }
+
+    const f = man.flight || {};
+    const ac = (f.aircraft_type||'').trim();
+    const seats = AC_SEATS[ac] || (ac.includes('700')?143: (ac.includes('800')||ac.includes('MAX')?175:160));
+    const pax = typeof f.passenger_count === 'number' ? f.passenger_count : uniquePassengersFromManifest(man);
+    const load = Math.max(0, Math.min(100, Math.round((pax / (seats||1))*100)));
+
+    if(paxEl) paxEl.textContent = `${pax} / ${seats} seats`;
+    if(acEl) acEl.textContent = `Aircraft: ${ac || 'Unknown'}`;
+    if(pload) pload.textContent = `Load factor: ${load}%`;
+    if(pbar) pbar.style.width = load + '%';
+    if(pline) pline.style.width = load + '%';
+
+    const paxWeight = pax * 190;
+    const bagWeight = Math.round(Number(snap?.totals?.weightLb||0));
+    const hours = estimateHoursForFlight(f);
+    const fuelLb = (2400 * hours) * 2.20462;
+    if(wPax) wPax.textContent = `Pax: ${Math.round(paxWeight).toLocaleString()} lb (190 lb avg)`;
+    if(wBags) wBags.textContent = `Bags: ${bagWeight.toLocaleString()} lb`;
+    if(wFuel) wFuel.textContent = `Fuel: ${Math.round(fuelLb).toLocaleString()} lb (~${Math.round(((2400*hours)/3.05)).toLocaleString()} gal)`;
+    if(wTot)  wTot.innerHTML = `<strong>Total: ${(Math.round(paxWeight+bagWeight+fuelLb)).toLocaleString()} lb</strong>`;
   }
 
   (async function init(){
@@ -211,17 +335,26 @@
     }
 
     // Initial render = latest snapshot
-    renderSnapshot(read(LATEST_KEY));
+    const latest = read(LATEST_KEY);
+    const latestFlight = latest?.flightNumber;
+    const manLatest = (data?.manifests||[]).find(m=> m.flight?.flight_number===latestFlight);
+    renderSnapshot(latest, false, manLatest || null);
 
     sel?.addEventListener('change', (e)=>{
       const fn = e.target.value;
-      if(!fn){ renderSnapshot(read(LATEST_KEY)); return; }
+      if(!fn){ 
+        const latest = read(LATEST_KEY);
+        const manL = (data?.manifests||[]).find(m=> m.flight?.flight_number===latest?.flightNumber);
+        renderSnapshot(latest, false, manL || null); 
+        return; 
+      }
       const cached = read(flightKey(fn));
+      const man = (data?.manifests||[]).find(m => m.flight?.flight_number === fn);
       if(!cached || Number(cached.version) < 4){
         const snap = getFlightSnapshot(fn, data);
-        renderSnapshot(snap, true);
+        renderSnapshot(snap, true, man || null);
       }else{
-        renderSnapshot(cached, false);
+        renderSnapshot(cached, false, man || null);
       }
     });
 
@@ -229,28 +362,38 @@
       const fn = sel?.value || '';
       if(fn){
         const cached = read(flightKey(fn));
+        const man = (data?.manifests||[]).find(m => m.flight?.flight_number === fn);
         if(!cached || Number(cached.version) < 4){
           const snap = getFlightSnapshot(fn, data);
-          renderSnapshot(snap, true);
+          renderSnapshot(snap, true, man || null);
         }else{
-          renderSnapshot(cached, false);
+          renderSnapshot(cached, false, man || null);
         }
       }else{
-        renderSnapshot(read(LATEST_KEY));
+        const latest = read(LATEST_KEY);
+        const manL = (data?.manifests||[]).find(m=> m.flight?.flight_number===latest?.flightNumber);
+        renderSnapshot(latest, false, manL || null);
       }
     });
 
     document.getElementById('clear-cache')?.addEventListener('click', ()=>{
       const fn = sel?.value || '';
-      if(fn){ localStorage.removeItem(flightKey(fn)); renderSnapshot(null); }
-      else { localStorage.removeItem(LATEST_KEY); renderSnapshot(null); }
+      if(fn){ localStorage.removeItem(flightKey(fn)); renderSnapshot(null, false, null); }
+      else { localStorage.removeItem(LATEST_KEY); renderSnapshot(null, false, null); }
     });
 
     // Cross-tab updates from loader
     window.addEventListener('storage', (ev)=>{
       const fn = sel?.value || '';
-      if(fn && ev.key === flightKey(fn)) renderSnapshot(read(flightKey(fn)));
-      if(!fn && ev.key === LATEST_KEY)   renderSnapshot(read(LATEST_KEY));
+      if(fn && ev.key === flightKey(fn)){
+        const man = (data?.manifests||[]).find(m => m.flight?.flight_number === fn);
+        renderSnapshot(read(flightKey(fn)), false, man || null);
+      }
+      if(!fn && ev.key === LATEST_KEY){
+        const latest = read(LATEST_KEY);
+        const manL = (data?.manifests||[]).find(m=> m.flight?.flight_number===latest?.flightNumber);
+        renderSnapshot(latest, false, manL || null);
+      }
     });
   })();
 </script>

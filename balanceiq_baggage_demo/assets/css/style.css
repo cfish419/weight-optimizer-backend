@@ -80,4 +80,38 @@ tfoot td{font-weight:700}
 .swatch{width:12px; height:12px; border-radius:3px; display:inline-block}
 footer{color:#94a3b8; text-align:center; font-size:12px; margin-top:22px}
 @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
-.hdr-link{ color:#fff; margin-left:auto; text-decoration:none; font-weight:700 }
+/* Header layout */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Push everything after the brand text to the far right */
+.header .brand-text {
+  margin-right: auto;           /* <-- this forces the link group to the right */
+}
+
+/* Style the two links and space them apart */
+.hdr-link,
+.hdr-link:visited {
+  color: #fff;                  /* match BalanceIQ color */
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.header .hdr-link + .hdr-link {
+  margin-left: 28px;            /* spacing between Supervisor and Ramp */
+}
+
+.hdr-link:hover { text-decoration: underline; }
+
+/* Make space below the first (Flight & Passenger) card */
+.container > .card:first-of-type {
+  margin-bottom: 24px;       /* match or exceed your grid gap (try 24; use 16–28 to taste) */
+}
+
+/* If you want the spacing a bit tighter on small screens */
+@media (max-width: 800px) {
+  .container > .card:first-of-type { margin-bottom: 16px; }
+}

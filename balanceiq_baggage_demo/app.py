@@ -14,6 +14,10 @@ def index():
 def supervisor():
     return render_template('supervisor.html')
 
+@app.route('/ramp')  # NEW: Ramp page route
+def ramp():
+    return render_template('ramp.html')
+
 # Helpful redirects if someone types the .html filenames
 @app.route('/index.html')
 def index_html():
@@ -22,6 +26,10 @@ def index_html():
 @app.route('/supervisor.html')
 def supervisor_html():
     return redirect('/supervisor', code=301)
+
+@app.route('/ramp.html')  # NEW: Redirect to /ramp
+def ramp_html():
+    return redirect('/ramp', code=301)
 
 # Serve assets from /assets/*
 @app.route('/assets/<path:path>')
@@ -39,6 +47,5 @@ def api_proxy(path):
         return jsonify({"error": "Backend unavailable", "details": str(e)}), 503
 
 if __name__ == '__main__':
-    print(f"Frontend starting on port 5050")
-    print(f"Backend API URL: {Config.BACKEND_API_URL}")
-    app.run(debug=Config.DEBUG, host='0.0.0.0', port=5050)
+    # Change port=5050 if you want a different port
+    app.run(debug=True, host='0.0.0.0', port=5050)
