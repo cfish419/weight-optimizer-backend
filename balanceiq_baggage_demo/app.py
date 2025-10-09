@@ -1,7 +1,10 @@
-from flask import Flask, render_template, redirect, send_from_directory
+from flask import Flask, render_template, redirect, send_from_directory, jsonify
 import os
+import requests
+from config import Config
 
 app = Flask(__name__, static_folder='assets', template_folder='templates')
+app.config.from_object(Config)
 
 @app.route('/')
 def index():
@@ -25,6 +28,17 @@ def supervisor_html():
 def assets(path):
     return send_from_directory('assets', path)
 
+@app.route('/api/proxy/<path:path>')
+def api_proxy(path):
+    """Proxy API calls to backend"""
+    try:
+        backend_url = Config.get_api_endpoint(path)
+        response = requests.get(backend_url, timeout=10)
+        return jsonify(response.json()), response.status_code
+    except Exception as e:
+        return jsonify({"error": "Backend unavailable", "details": str(e)}), 503
+
 if __name__ == '__main__':
-    # Change port=5050 if you want a different port
-    app.run(debug=True, host='0.0.0.0', port=5050)
+    print(f"Frontend starting on port 5050")
+    print(f"Backend API URL: {Config.BACKEND_API_URL}")
+    app.run(debug=Config.DEBUG, host='0.0.0.0', port=5050)
