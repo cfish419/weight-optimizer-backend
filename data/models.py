@@ -1,7 +1,8 @@
-from dataclasses import dataclass, asdict
-from typing import Dict, Any, Optional, List
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
 
 class FlightStatus(Enum):
     PLANNING = "planning"
@@ -11,11 +12,13 @@ class FlightStatus(Enum):
     DEPARTED = "departed"
     COMPLETED = "completed"
 
+
 class BaggageStatus(Enum):
     CHECKED = "checked"
     LOADED = "loaded"
     TRANSFERRED = "transferred"
     REMOVED = "removed"
+
 
 @dataclass
 class Flight:
@@ -32,20 +35,21 @@ class Flight:
     status: FlightStatus = FlightStatus.PLANNING
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         data = asdict(self)
-        data['status'] = self.status.value
-        if not data['created_at']:
-            data['created_at'] = datetime.utcnow().isoformat()
-        data['updated_at'] = datetime.utcnow().isoformat()
+        data["status"] = self.status.value
+        if not data["created_at"]:
+            data["created_at"] = datetime.utcnow().isoformat()
+        data["updated_at"] = datetime.utcnow().isoformat()
         return data
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Flight':
-        if 'status' in data and isinstance(data['status'], str):
-            data['status'] = FlightStatus(data['status'])
+    def from_dict(cls, data: Dict[str, Any]) -> "Flight":
+        if "status" in data and isinstance(data["status"], str):
+            data["status"] = FlightStatus(data["status"])
         return cls(**data)
+
 
 @dataclass
 class Baggage:
@@ -59,20 +63,21 @@ class Baggage:
     status: BaggageStatus = BaggageStatus.CHECKED
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         data = asdict(self)
-        data['status'] = self.status.value
-        if not data['created_at']:
-            data['created_at'] = datetime.utcnow().isoformat()
-        data['updated_at'] = datetime.utcnow().isoformat()
+        data["status"] = self.status.value
+        if not data["created_at"]:
+            data["created_at"] = datetime.utcnow().isoformat()
+        data["updated_at"] = datetime.utcnow().isoformat()
         return data
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Baggage':
-        if 'status' in data and isinstance(data['status'], str):
-            data['status'] = BaggageStatus(data['status'])
+    def from_dict(cls, data: Dict[str, Any]) -> "Baggage":
+        if "status" in data and isinstance(data["status"], str):
+            data["status"] = BaggageStatus(data["status"])
         return cls(**data)
+
 
 @dataclass
 class AircraftConfig:
@@ -91,17 +96,18 @@ class AircraftConfig:
     optimal_cg: float
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         data = asdict(self)
-        if not data['created_at']:
-            data['created_at'] = datetime.utcnow().isoformat()
-        data['updated_at'] = datetime.utcnow().isoformat()
+        if not data["created_at"]:
+            data["created_at"] = datetime.utcnow().isoformat()
+        data["updated_at"] = datetime.utcnow().isoformat()
         return data
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'AircraftConfig':
+    def from_dict(cls, data: Dict[str, Any]) -> "AircraftConfig":
         return cls(**data)
+
 
 @dataclass
 class CalculationResult:
@@ -119,16 +125,16 @@ class CalculationResult:
     warnings: List[str]
     timestamp: Optional[str] = None
     expires_at: Optional[int] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         data = asdict(self)
-        if not data['timestamp']:
-            data['timestamp'] = datetime.utcnow().isoformat()
+        if not data["timestamp"]:
+            data["timestamp"] = datetime.utcnow().isoformat()
         # Set expiration to 24 hours from now (for DynamoDB TTL)
-        if not data['expires_at']:
-            data['expires_at'] = int(datetime.utcnow().timestamp()) + 86400
+        if not data["expires_at"]:
+            data["expires_at"] = int(datetime.utcnow().timestamp()) + 86400
         return data
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'CalculationResult':
+    def from_dict(cls, data: Dict[str, Any]) -> "CalculationResult":
         return cls(**data)

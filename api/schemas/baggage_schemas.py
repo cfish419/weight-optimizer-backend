@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from typing import Optional, Dict, Any
 from enum import Enum
+from typing import Any, Dict, Optional
 
 
 class BaggageType(Enum):
@@ -32,17 +32,21 @@ class BaggageItem:
     hazardous: bool = False
     loading_instructions: Optional[str] = None
     compartment_preference: Optional[str] = None
-    
+
     def calculate_volume(self) -> float:
         """Calculate baggage volume in cubic meters"""
         return (self.length * self.width * self.height) / 1000000  # Convert cm³ to m³
-    
+
     def is_oversized(self) -> bool:
         """Check if baggage exceeds standard dimensions"""
         # 737 cargo door: 117cm x 165cm
-        return (self.length > 150 or self.width > 100 or 
-                self.height > 80 or self.weight > 32)
-    
+        return (
+            self.length > 150
+            or self.width > 100
+            or self.height > 80
+            or self.weight > 32
+        )
+
     def get_loading_priority(self) -> int:
         """Get loading priority (1=highest, 5=lowest)"""
         if self.baggage_type == BaggageType.GATE_CHECK:
@@ -65,10 +69,10 @@ class FlightBaggageManifest:
     total_volume: float = 0.0
     forward_compartment_weight: float = 0.0
     aft_compartment_weight: float = 0.0
-    
+
     def __post_init__(self):
         self.calculate_totals()
-    
+
     def calculate_totals(self):
         """Calculate total weight and volume"""
         self.total_weight = sum(item.weight for item in self.baggage_items)

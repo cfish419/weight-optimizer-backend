@@ -1,17 +1,19 @@
+import os
+from contextlib import asynccontextmanager
+
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from contextlib import asynccontextmanager
-import uvicorn
-import os
 
-from api.routes import baggage, weight_balance, devices, scenarios, auth
+from api.routes import auth, baggage, devices, scenarios, weight_balance
+from data.database import get_database
 from services.baggage_tracking.baggage_service import BaggageService
-from services.sync_engine.sync_service import SyncService
 from services.offline_manager.offline_service import OfflineService
 from services.scenario_service import ScenarioService
+from services.sync_engine.sync_service import SyncService
 from services.weather_service import WeatherService
-from data.database import get_database
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,17 +23,17 @@ async def lifespan(app: FastAPI):
     # Shutdown
     print("Shutting down...")
 
+
 app = FastAPI(
     title="Boeing 737 Weight & Balance Optimizer",
     description="Comprehensive cargo loading optimization system delivering $545K annual value per aircraft",
     version="2.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Session middleware for OAuth state management
 app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.getenv("JWT_SECRET_KEY", "dev-secret-key")
+    SessionMiddleware, secret_key=os.getenv("JWT_SECRET_KEY", "dev-secret-key")
 )
 
 # CORS middleware
@@ -40,7 +42,7 @@ app.add_middleware(
     allow_origins=[
         "https://demo.dev.balanceiq.com",
         "http://localhost:3000",  # Development
-        "http://localhost:8000"   # API docs
+        "http://localhost:8000",  # API docs
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -53,6 +55,7 @@ app.include_router(baggage.router)
 app.include_router(weight_balance.router)
 app.include_router(devices.router)
 app.include_router(scenarios.router)
+
 
 @app.get("/")
 async def root():
@@ -67,16 +70,17 @@ async def root():
             "FAA compliance automation",
             "IoT device integration",
             "Weather impact analysis",
-            "Operational scenario handling"
+            "Operational scenario handling",
         ],
         "endpoints": {
             "baggage": "/baggage",
-            "weight_balance": "/weight-balance", 
+            "weight_balance": "/weight-balance",
             "devices": "/devices",
             "scenarios": "/scenarios",
-            "docs": "/docs"
-        }
+            "docs": "/docs",
+        },
     }
+
 
 @app.get("/health")
 async def health_check():
@@ -88,18 +92,14 @@ async def health_check():
         await db.get_flight("health-check")
     except Exception as e:
         db_status = f"unhealthy: {str(e)}"
-    
+
     return {
         "status": "healthy" if db_status == "healthy" else "degraded",
         "service": "weight-optimizer-api",
         "version": "2.0.0",
-        "database": db_status
+        "database": db_status,
     }
 
+
 if __name__ == "__main__":
-    uvicorn.run(
-        "app:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True
-    )
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

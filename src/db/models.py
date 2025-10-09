@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from .database import Base
+
 
 class Flight(Base):
     __tablename__ = "flights"
@@ -12,9 +14,10 @@ class Flight(Base):
     aircraft_type = Column(String)
     departure_time = Column(DateTime)
     estimated_passengers = Column(Integer)
-    
+
     # Relationship with baggage
     baggage_items = relationship("Baggage", back_populates="flight")
+
 
 class Baggage(Base):
     __tablename__ = "baggage"
@@ -29,7 +32,7 @@ class Baggage(Base):
     priority = Column(String)
     category = Column(String)
     status = Column(String)
-    
+
     # Foreign key to flight
     flight_id = Column(String, ForeignKey("flights.id"))
     flight = relationship("Flight", back_populates="baggage_items")
