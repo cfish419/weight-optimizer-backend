@@ -23,17 +23,17 @@ services:
     networks:
       - weight-optimizer-network
 
-  # Frontend service (Phase 3)
+  # Frontend service (BalanceIQ Baggage Demo)
   frontend:
     build:
-      context: ../frontend
+      context: ../balanceiq_baggage_demo
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:5050"  # Map host 3000 to container 5050
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
-      - REACT_APP_WEBSOCKET_URL=ws://localhost:8000/ws
-      - REACT_APP_ENVIRONMENT=development
+      - FLASK_ENV=development
+      - FLASK_DEBUG=true
+      - BACKEND_API_URL=http://backend:8000
     depends_on:
       - backend
     restart: unless-stopped
@@ -79,29 +79,12 @@ services:
     networks:
       - weight-optimizer-network
 
-  # Nginx reverse proxy (production)
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./ssl:/etc/nginx/ssl:ro
-      - nginx_logs:/var/log/nginx
-    depends_on:
-      - backend
-      - frontend
-    restart: unless-stopped
-    networks:
-      - weight-optimizer-network
+
 
 volumes:
   postgres_data:
     driver: local
   redis_data:
-    driver: local
-  nginx_logs:
     driver: local
 
 networks:
