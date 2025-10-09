@@ -1,0 +1,29 @@
+# Production Environment Configuration
+# Copy to terraform.tfvars and customize
+
+# Basic Configuration
+project_name = "weight-optimizer"
+environment  = "production"
+aws_region   = "us-east-1"
+
+# Observability Configuration
+alert_emails = [
+  "ops-team@company.com",
+  "devops@company.com"
+]
+
+# Infrastructure Configuration
+instance_type      = "t3.medium"
+root_volume_size   = 20
+data_volume_size   = 50
+key_pair_name      = "weight-optimizer-prod"
+
+# Network Configuration
+vpc_cidr = "10.0.0.0/24"
+
+# Feature Flags
+enable_transit_gateway = true
+enable_flow_logs      = true
+
+# Security
+owner = "DevOps Team"

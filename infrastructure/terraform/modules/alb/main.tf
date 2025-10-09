@@ -18,6 +18,7 @@ resource "aws_lb" "main" {
 resource "aws_security_group" "alb" {
   name_prefix = "${var.project_name}-alb-"
   vpc_id      = var.vpc_id
+  description = "Security group for Application Load Balancer"
 
   ingress {
     description = "HTTP"
@@ -36,6 +37,7 @@ resource "aws_security_group" "alb" {
   }
 
   egress {
+    description = "All outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -105,13 +107,30 @@ resource "aws_lb_listener" "web" {
   protocol          = "HTTP"
 
   default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = var.ssl_certificate_arn
+
+  default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.app.arn
   }
 }
 
 resource "aws_lb_listener_rule" "api" {
-  listener_arn = aws_lb_listener.web.arn
+  listener_arn = aws_lb_listener.https.arn
   priority     = 100
 
   action {
@@ -127,7 +146,7 @@ resource "aws_lb_listener_rule" "api" {
 }
 
 resource "aws_lb_listener_rule" "websocket" {
-  listener_arn = aws_lb_listener.web.arn
+  listener_arn = aws_lb_listener.https.arn
   priority     = 200
 
   action {

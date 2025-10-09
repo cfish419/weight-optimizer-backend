@@ -226,6 +226,9 @@ resource "aws_ec2_transit_gateway" "main" {
   description                     = "Transit Gateway for ${var.project_name}"
   default_route_table_association = "enable"
   default_route_table_propagation = "enable"
+  auto_accept_shared_attachments  = "disable"
+  default_route_table_association = "enable"
+  default_route_table_propagation = "enable"
 
   tags = {
     Name        = "${var.project_name}-tgw"

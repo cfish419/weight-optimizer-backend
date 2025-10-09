@@ -193,6 +193,18 @@ resource "aws_ecr_lifecycle_policy" "main" {
   })
 }
 
+# CloudWatch Observability Module
+module "cloudwatch" {
+  source = "../../modules/cloudwatch"
+  
+  environment    = var.environment
+  aws_region     = var.aws_region
+  alb_arn_suffix = module.alb.alb_arn_suffix
+  instance_id    = module.ec2.instance_id
+  alert_emails   = var.alert_emails
+  tags           = local.common_tags
+}
+
 # ALB Target Group Attachments
 resource "aws_lb_target_group_attachment" "app" {
   target_group_arn = module.alb.app_target_group_arn

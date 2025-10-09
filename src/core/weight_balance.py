@@ -1,5 +1,6 @@
 from typing import Tuple, Dict
 from ..models.aircraft import FlightConfiguration, LoadItem
+from services.observability_service import observability
 
 
 class WeightBalanceCalculator:
@@ -18,6 +19,7 @@ class WeightBalanceCalculator:
                 config.fuel_weight + cargo_weight)
     
     @staticmethod
+    @observability.track_performance('WeightCalculation')
     def calculate_center_of_gravity(config: FlightConfiguration) -> float:
         """Calculate aircraft center of gravity as percentage of MAC"""
         # Simplified calculation - would need actual arm data for precise results
